@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,23 @@ export function Hero({
   videoUrl?: string;
 }) {
   const backdropRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   useGsapParallax(backdropRef);
 
-  // Skip the video entirely for prefers-reduced-motion — the still image stays as the backdrop.
-  const [allowVideo, setAllowVideo] = useState(false);
+  // React has a long-standing bug where it doesn't reliably sync the `muted`
+  // *property* from the JSX attribute (facebook/react#10389) — an unmuted video
+  // element fails the browser's autoplay policy and silently freezes on the
+  // poster frame, which looks identical to "no video". Setting it imperatively
+  // and kicking off play() explicitly sidesteps that.
   useEffect(() => {
-    setAllowVideo(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.play().catch(() => {
+      // Autoplay can still be rejected (e.g. low-power mode) — the poster
+      // image remains a perfectly fine static backdrop in that case.
+    });
+  }, [videoUrl]);
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
@@ -35,15 +45,17 @@ export function Hero({
         className="absolute inset-0 -top-[10%] h-[120%] bg-cover bg-center will-change-transform"
         style={{ backgroundImage: `url(${imageUrl})` }}
       >
-        {videoUrl && allowVideo && (
+        {videoUrl && (
           <video
+            ref={videoRef}
             aria-hidden
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             poster={imageUrl}
-            className="h-full w-full object-cover"
+            className="motion-reduce:hidden h-full w-full object-cover"
           >
             <source src={videoUrl} type="video/mp4" />
           </video>

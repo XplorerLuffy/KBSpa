@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Kuenphen Beauty Spa, since 2020">
+  <title>Kuenphen Beauty Spa</title>
+  <defs>
+    <path id="kbs-arc" d="M 34 232 A 166 166 0 0 1 366 232" fill="none" />
+    <radialGradient id="kbs-disc" cx="42%" cy="34%" r="78%">
+      <stop offset="0%" stop-color="#f7e05a" />
+      <stop offset="58%" stop-color="#efd521" />
+      <stop offset="100%" stop-color="#e2c412" />
+    </radialGradient>
+    <linearGradient id="kbs-skin" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#fbf6e6" />
+    </linearGradient>
+  </defs>
+
+  <circle cx="200" cy="218" r="122" fill="url(#kbs-disc)" stroke="#7a5c24" stroke-width="3" />
+
+  <g stroke="#8a6a1f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#fdf9ec" transform="rotate(9 232 190) translate(26 -4)"
+          d="M232 128
+             C 239 124 247 128 248 136
+             C 251 156 250 176 246 195
+             C 243 210 238 224 231 236
+             C 226 245 217 247 211 241
+             C 206 236 206 227 211 221
+             C 217 212 221 202 224 191
+             C 220 202 214 212 207 221
+             C 201 229 193 230 187 225
+             C 181 220 180 212 185 205
+             C 194 193 200 180 203 167
+             C 199 179 193 191 185 201
+             C 179 209 171 210 165 205
+             C 159 200 158 192 163 185
+             C 173 171 180 156 183 140
+             C 184 132 191 128 199 130
+             C 206 132 210 139 208 147
+             C 206 156 203 165 199 173
+             C 206 159 212 143 216 128
+             C 218 120 226 117 232 121
+             Z" />
+
+    <path fill="url(#kbs-skin)"
+          d="M182 336
+             C 158 324 145 302 141 277
+             C 138 258 141 239 148 221
+             C 152 210 158 199 164 190
+             C 168 184 175 183 180 187
+             C 185 191 185 198 182 204
+             C 177 213 173 222 171 232
+             C 175 219 182 204 190 190
+             C 196 180 204 171 213 163
+             C 219 157 227 158 231 165
+             C 235 171 233 178 228 183
+             C 218 193 210 205 204 217
+             C 212 202 223 188 235 176
+             C 242 169 250 170 254 176
+             C 259 182 257 189 252 195
+             C 241 206 232 219 225 232
+             C 234 220 244 209 254 200
+             C 261 195 269 196 273 202
+             C 277 209 275 216 268 221
+             C 256 231 247 243 241 256
+             C 237 266 235 276 235 286
+             C 235 309 221 329 200 337
+             Z" />
+  </g>
+
+  <g fill="#111111" font-family="Inter, Helvetica, Arial, sans-serif" font-weight="700">
+    <text font-size="33" letter-spacing="1.2" text-anchor="middle">
+      <textPath href="#kbs-arc" startOffset="50%">KUENPHEN BEAUTY SPA</textPath>
+    </text>
+    <text x="200" y="381" font-size="27" letter-spacing="1.4" text-anchor="middle">SINCE 2020</text>
+  </g>
+</svg>

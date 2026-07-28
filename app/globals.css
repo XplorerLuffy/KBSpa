@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #faf6ee;
+  --color-cream-200: #f5eede;
+  --color-cream-300: #efe4cb;
+
+  --color-beige-100: #f0e8da;
+  --color-beige-200: #e5d9c3;
+  --color-beige-300: #d8c8ab;
+  --color-beige-400: #c4ae8c;
+
+  --color-gold-50: #fdf9ec;
+  --color-gold-100: #faf1cf;
+  --color-gold-200: #f3e29c;
+  --color-gold-300: #eacd63;
+  --color-gold-400: #e0b83c;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b8912a;
+  --color-gold-700: #937024;
+  --color-gold-800: #7a5c24;
+  --color-gold-900: #684d23;
+
+  --color-olive-50: #f6f7f0;
+  --color-olive-100: #e9ecdb;
+  --color-olive-200: #d4dabb;
+  --color-olive-300: #b7c193;
+  --color-olive-400: #9aa671;
+  --color-olive-500: #7d8a55;
+  --color-olive-600: #616d42;
+  --color-olive-700: #4c5536;
+  --color-olive-800: #3f462f;
+  --color-olive-900: #363c2b;
+
+  --color-charcoal-50: #f6f5f4;
+  --color-charcoal-400: #7a736c;
+  --color-charcoal-600: #4a4540;
+  --color-charcoal-800: #2c2926;
+  --color-charcoal-900: #1c1a18;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
+
+  --shadow-soft: 0 2px 8px -2px rgb(120 100 70 / 0.08), 0 8px 24px -8px rgb(120 100 70 / 0.12);
+  --shadow-soft-lg: 0 4px 16px -4px rgb(120 100 70 / 0.1), 0 20px 48px -12px rgb(120 100 70 / 0.18);
+  --shadow-gold: 0 8px 32px -8px rgb(212 175 55 / 0.45);
+}
+
+:root {
+  --background: #fdfbf7;
+  --foreground: #1c1a18;
+  --card: #ffffff;
+  --card-foreground: #1c1a18;
+  --popover: #ffffff;
+  --popover-foreground: #1c1a18;
+  --primary: #d4af37;
+  --primary-foreground: #241d05;
+  --secondary: #616d42;
+  --secondary-foreground: #ffffff;
+  --muted: #f5eede;
+  --muted-foreground: #6b645c;
+  --accent: #f0e8da;
+  --accent-foreground: #2c2926;
+  --destructive: #b4342b;
+  --destructive-foreground: #ffffff;
+  --border: #e5d9c3;
+  --input: #e5d9c3;
+  --ring: #d4af37;
+  --radius: 0.875rem;
+}
+
+.dark {
+  --background: #17161a;
+  --foreground: #f3efe7;
+  --card: #201e23;
+  --card-foreground: #f3efe7;
+  --popover: #201e23;
+  --popover-foreground: #f3efe7;
+  --primary: #e0b83c;
+  --primary-foreground: #1c1608;
+  --secondary: #9aa671;
+  --secondary-foreground: #14170e;
+  --muted: #2a272e;
+  --muted-foreground: #a9a29a;
+  --accent: #2f2b33;
+  --accent-foreground: #f3efe7;
+  --destructive: #d1544a;
+  --destructive-foreground: #ffffff;
+  --border: #35313a;
+  --input: #35313a;
+  --ring: #e0b83c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@utility glass {
+  background-color: color-mix(in srgb, var(--card) 68%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+}

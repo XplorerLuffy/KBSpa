@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="presentation">
+  <defs>
+    <linearGradient id="warm" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#6d5a30" />
+      <stop offset="45%" stop-color="#a5884b" />
+      <stop offset="100%" stop-color="#d9c393" />
+    </linearGradient>
+    <radialGradient id="glow" cx="68%" cy="26%" r="55%">
+      <stop offset="0%" stop-color="#ffe9a8" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#ffe9a8" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4b4630" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#2b2a20" stop-opacity="0.9" />
+    </linearGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#5d5849" />
+      <stop offset="100%" stop-color="#312e28" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#warm)" />
+  <rect width="1600" height="900" fill="url(#glow)" />
+
+  <g fill="#fff6dd">
+    <circle cx="1090" cy="212" r="86" opacity="0.18" />
+    <circle cx="1090" cy="212" r="52" opacity="0.26" />
+  </g>
+
+  <path d="M0 620 C 260 566 520 596 800 626 C 1080 656 1340 640 1600 596 L1600 900 L0 900 Z" fill="url(#water)" />
+
+  <g fill="url(#stone)">
+    <ellipse cx="352" cy="742" rx="150" ry="42" />
+    <ellipse cx="352" cy="676" rx="116" ry="35" />
+    <ellipse cx="352" cy="622" rx="86" ry="28" />
+    <ellipse cx="352" cy="578" rx="60" ry="21" />
+  </g>
+
+  <g fill="#efe0b4" opacity="0.9">
+    <ellipse cx="1148" cy="706" rx="66" ry="24" transform="rotate(-14 1148 706)" />
+    <ellipse cx="1236" cy="742" rx="52" ry="19" transform="rotate(9 1236 742)" />
+    <circle cx="1188" cy="668" r="17" fill="#fffaf0" />
+  </g>
+
+  <g stroke="#e7d7a6" stroke-width="3" fill="none" opacity="0.5">
+    <path d="M1372 780 C 1400 700 1442 646 1508 610" />
+    <path d="M1404 742 C 1420 706 1452 682 1490 668" />
+  </g>
+
+  <rect width="1600" height="900" fill="#241d05" opacity="0.3" />
+</svg>

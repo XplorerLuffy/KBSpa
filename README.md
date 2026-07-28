@@ -20,10 +20,19 @@ npm run dev                  # http://localhost:3000
 
 | Variable | Where | Notes |
 | --- | --- | --- |
+Three variables are required to run the site — none of them secret:
+
+| Variable | Where | Notes |
+| --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Vercel + local | `https://<project-ref>.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel + local | Publishable key (`sb_publishable_…`) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Vercel + local | **Server only.** Bypasses RLS — never prefix with `NEXT_PUBLIC_` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel + local | Publishable key (`sb_publishable_…`). Safe to expose — RLS is what protects the data |
 | `NEXT_PUBLIC_SITE_URL` | Vercel + local | Used for metadata, sitemap and auth redirect links |
+
+Optional:
+
+| Variable | Where | Notes |
+| --- | --- | --- |
+| `SUPABASE_SERVICE_ROLE_KEY` | Vercel + local | **Not needed today.** Only `lib/notifications/sms.ts` reads it, and that stub has no call sites yet. The Edge Functions get their own copy injected by Supabase. **Server only** — bypasses RLS, never prefix with `NEXT_PUBLIC_` |
 | `RESEND_API_KEY` | Supabase Edge Function secret | Transactional email |
 | `RESEND_FROM_EMAIL` | Supabase Edge Function secret | e.g. `bookings@yourdomain.com` |
 | `ADMIN_NOTIFICATION_EMAIL` | Supabase Edge Function secret | Where new/cancelled booking alerts go |

@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 
 const PROTECTED_PREFIXES = ["/account", "/booking/review", "/booking/confirmation"];
 const ADMIN_PREFIX = "/admin";
@@ -13,6 +12,16 @@ const ADMIN_PREFIX = "/admin";
  * 500 for *every* request, so a missing env var or a Supabase blip would take
  * the whole site down. Instead we fail closed on guarded routes (send the user
  * to /login) and open on public ones.
+ *
+ * `@supabase/ssr` is loaded with a dynamic import *inside* the try block below,
+ * not as a static top-level import. A static import is evaluated when the module
+ * loads, before the function body (and its try/catch) ever runs — so if anything
+ * in that module's graph throws during evaluation, it crashes the whole Edge
+ * Function with no chance to fail open. That's what was happening: the deployed
+ * bundle threw `ReferenceError: __dirname is not defined` at import time, and no
+ * in-function try/catch could ever have caught it. Routing the import itself
+ * through the try block means a broken import degrades auth instead of taking
+ * down the entire site.
  */
 function isGuarded(pathname: string) {
   return (
@@ -41,6 +50,8 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
+    const { createServerClient } = await import("@supabase/ssr");
+
     let response = NextResponse.next({ request });
 
     const supabase = createServerClient(url, anonKey, {

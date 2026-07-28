@@ -45,7 +45,8 @@ components/shared/          Logo, Navbar, Footer, GlassPanel, PageHero, …
 components/motion/          Framer Motion wrappers (FadeIn, StaggerList)
 features/<domain>/          Feature UI + server actions, grouped by domain
 services/                   Data access — every Supabase query lives here
-lib/supabase/               Browser / server / middleware / service-role clients
+lib/supabase/               Browser / server / service-role clients
+middleware.ts               Session refresh + route guards (self-contained for the Edge bundle)
 lib/                        utils, constants, notifications, SEO helpers
 schemas/                    Zod schemas (shared by forms and server actions)
 types/                      Generated DB types + domain aliases

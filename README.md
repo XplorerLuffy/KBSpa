@@ -159,7 +159,10 @@ update public.profiles set role = 'admin' where id = (
 
 ## Deploying to Vercel
 
-1. Import the repo in Vercel and set the four `NEXT_PUBLIC_*` / service-role variables.
+1. Import the repo in Vercel and set the three required variables (`NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` — the last one must match the
+   domain you're deploying to, or metadata/sitemap/auth-redirect links will point at the
+   wrong host). `SUPABASE_SERVICE_ROLE_KEY` is optional — see `.env.example`.
 2. In Supabase → **Authentication → URL Configuration**, set the Site URL to your
    production domain and add `<domain>/auth/callback` to the redirect allow-list.
 3. Create public Storage buckets for uploaded imagery: `services`, `staff`, `gallery`,

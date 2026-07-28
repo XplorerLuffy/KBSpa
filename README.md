@@ -180,8 +180,26 @@ update public.profiles set role = 'admin' where id = (
 Nothing user-facing is hardcoded. From `/admin` you can manage services, categories,
 staff (and which treatments each performs), bookings, holidays and vacation days,
 opening hours, gallery, testimonials, promotions, and every site setting — business
-name, logo, contact details, social links, hero image, about copy, booking slot
+name, logo, contact details, social links, hero image/video, about copy, booking slot
 interval, and timezone.
+
+---
+
+## Hero background video
+
+The homepage hero plays a looping ambient MP4 (`public/hero-video.mp4`) over the still
+image, generated with [Remotion](https://remotion.dev) — brand-colored gradient, drifting
+gold/olive bokeh, and a faint rotating watermark of `public/logo.svg`. Source lives in
+`remotion/`. To re-render after tweaking it:
+
+```bash
+npx remotion render remotion/src/index.ts HeroBackground public/hero-video.mp4
+```
+
+`npx remotion studio remotion/src/index.ts` opens a live preview. The video is skipped
+entirely for visitors with `prefers-reduced-motion` enabled (the still image stays as the
+backdrop), and admins can override both the image and video URLs from **Settings** without
+a redeploy.
 
 ---
 

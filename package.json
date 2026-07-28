@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "remotion:studio": "remotion studio remotion/src/index.ts",
+    "remotion:render": "remotion render remotion/src/index.ts HeroBackground public/hero-video.mp4"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",
@@ -49,12 +51,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@remotion/cli": "^4.0.500",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.22",
+    "remotion": "^4.0.500",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

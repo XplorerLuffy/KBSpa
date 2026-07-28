@@ -51,6 +51,7 @@ export default async function HomePage() {
           "Premium beauty and wellness treatments tailored just for you."
         }
         imageUrl={settings.hero_image_url || "/hero.svg"}
+        videoUrl={settings.hero_video_url || "/hero-video.mp4"}
       />
 
       <section

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,21 @@ export function Hero({
   headline,
   subtitle,
   imageUrl,
+  videoUrl,
 }: {
   headline: string;
   subtitle: string;
   imageUrl: string;
+  videoUrl?: string;
 }) {
   const backdropRef = useRef<HTMLDivElement>(null);
   useGsapParallax(backdropRef);
+
+  // Skip the video entirely for prefers-reduced-motion — the still image stays as the backdrop.
+  const [allowVideo, setAllowVideo] = useState(false);
+  useEffect(() => {
+    setAllowVideo(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
@@ -26,7 +34,21 @@ export function Hero({
         aria-hidden
         className="absolute inset-0 -top-[10%] h-[120%] bg-cover bg-center will-change-transform"
         style={{ backgroundImage: `url(${imageUrl})` }}
-      />
+      >
+        {videoUrl && allowVideo && (
+          <video
+            aria-hidden
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={imageUrl}
+            className="h-full w-full object-cover"
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        )}
+      </div>
       <div
         aria-hidden
         className="from-charcoal-900/85 via-charcoal-900/45 to-charcoal-900/80 absolute inset-0 bg-gradient-to-b"

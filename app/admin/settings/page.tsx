@@ -94,6 +94,12 @@ export default async function AdminSettingsPage() {
             hint="Leave blank to use the bundled artwork."
           />
           <Field
+            name="setting_hero_video_url"
+            label="Hero background video URL"
+            defaultValue={settings.hero_video_url}
+            hint="Optional. MP4, looping, no audio. Leave blank to use the bundled animation. Ignored when a visitor has reduced-motion enabled."
+          />
+          <Field
             name="setting_hero_subtitle"
             label="Hero subtitle"
             defaultValue={settings.hero_subtitle}

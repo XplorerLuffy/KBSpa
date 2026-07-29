@@ -95,7 +95,7 @@ export default async function AboutPage() {
                       {person.full_name}
                     </h3>
                     {person.title && (
-                      <p className="text-gold-700 dark:text-gold-300 text-xs font-medium tracking-wide uppercase">
+                      <p className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
                         {person.title}
                       </p>
                     )}

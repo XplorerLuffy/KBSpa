@@ -16,7 +16,7 @@ export default async function AccountLayout({
       <Navbar isAuthenticated />
       <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 pt-28 pb-24 sm:px-6 lg:px-8">
         <div className="mb-10">
-          <p className="text-gold-700 dark:text-gold-300 text-xs font-medium tracking-[0.24em] uppercase">
+          <p className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
             My Account
           </p>
           <h1 className="mt-2 font-serif text-3xl font-medium">

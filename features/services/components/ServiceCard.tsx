@@ -9,10 +9,10 @@ import type { ServiceWithCategory } from "@/types/domain";
 
 export function ServiceCard({ service }: { service: ServiceWithCategory }) {
   return (
-    <Card className="group flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-soft-lg">
+    <Card className="group hover:border-olive-200 motion-safe:hover:-translate-y-1 flex h-full flex-col overflow-hidden border-transparent bg-card/90 transition-all duration-500 ease-[var(--ease-calm)] hover:shadow-soft-lg">
       <Link
         href={`/services/${service.slug}`}
-        className="bg-cream-200 relative block aspect-[4/3] overflow-hidden"
+        className="bg-cream-300 relative block aspect-[4/3] overflow-hidden"
         tabIndex={-1}
         aria-hidden="true"
       >
@@ -25,8 +25,8 @@ export function ServiceCard({ service }: { service: ServiceWithCategory }) {
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
-          <div className="from-beige-200 via-cream-200 to-gold-100 flex size-full items-center justify-center bg-gradient-to-br">
-            <Sparkles className="text-gold-600/40 size-10" />
+          <div className="from-olive-100 via-cream-200 to-beige-100 flex size-full items-center justify-center bg-gradient-to-br">
+            <Sparkles className="text-olive-500/40 size-9" />
           </div>
         )}
         {service.is_featured && (
@@ -36,7 +36,7 @@ export function ServiceCard({ service }: { service: ServiceWithCategory }) {
 
       <div className="flex flex-1 flex-col gap-3 p-6">
         {service.category && (
-          <span className="text-gold-700 dark:text-gold-300 text-xs font-medium tracking-[0.18em] uppercase">
+          <span className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
             {service.category.name}
           </span>
         )}
@@ -44,7 +44,7 @@ export function ServiceCard({ service }: { service: ServiceWithCategory }) {
         <h3 className="font-serif text-xl leading-snug font-medium">
           <Link
             href={`/services/${service.slug}`}
-            className="hover:text-gold-700 dark:hover:text-gold-300"
+            className="transition-colors hover:text-olive-700 dark:hover:text-olive-300"
           >
             {service.name}
           </Link>
@@ -66,7 +66,7 @@ export function ServiceCard({ service }: { service: ServiceWithCategory }) {
           </span>
         </div>
 
-        <Button asChild size="sm" className="mt-3 w-full">
+        <Button asChild variant="outline" className="mt-4 w-full">
           <Link href={`/booking?service=${service.slug}`}>Book</Link>
         </Button>
       </div>

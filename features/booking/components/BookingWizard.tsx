@@ -165,7 +165,7 @@ export function BookingWizard({
                 )}
               >
                 {item.category && (
-                  <span className="text-gold-700 text-xs font-medium tracking-wider uppercase">
+                  <span className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
                     {item.category.name}
                   </span>
                 )}

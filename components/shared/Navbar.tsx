@@ -19,15 +19,23 @@ import { cn } from "@/lib/utils";
 export function Navbar({
   isAuthenticated,
   logoUrl,
+  overDarkHero = false,
 }: {
   isAuthenticated: boolean;
   logoUrl?: string | null;
+  /**
+   * True only when the home hero shows the salon's own photo/video behind a
+   * dark scrim. The default hero is a light wash, where white nav text would be
+   * invisible — so the bar stays in its normal dark-on-light treatment.
+   */
+  overDarkHero?: boolean;
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
-  // The hero is only full-bleed on the home page; every other page needs a solid bar.
-  const overHero = pathname === "/";
+  // The hero is only full-bleed on the home page, and only readable behind a
+  // transparent bar when it has a dark backdrop.
+  const overHero = pathname === "/" && overDarkHero;
   const solid = scrolled || !overHero;
 
   useEffect(() => {
@@ -42,13 +50,13 @@ export function Navbar({
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         solid
-          ? "glass border-b border-border/60 shadow-soft"
-          : "bg-transparent border-b border-transparent",
+          ? "glass border-b border-border/50"
+          : "border-b border-transparent bg-transparent",
       )}
     >
       <nav
         aria-label="Main"
-        className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
+        className="container-page flex h-[4.5rem] items-center justify-between gap-4 py-3 sm:h-20"
       >
         <Logo inverted={!solid} src={logoUrl} />
 
@@ -65,8 +73,8 @@ export function Navbar({
                     "rounded-full px-4 py-2 text-sm font-medium transition-colors",
                     solid
                       ? active
-                        ? "text-gold-700 bg-gold-50 dark:text-gold-300 dark:bg-gold-900/20"
-                        : "text-charcoal-600 hover:text-gold-700 dark:text-cream-200 dark:hover:text-gold-300"
+                        ? "text-olive-800 bg-olive-100 dark:text-olive-200 dark:bg-olive-900/30"
+                        : "text-charcoal-600 hover:text-olive-800 hover:bg-olive-50 dark:text-cream-200 dark:hover:text-olive-200 dark:hover:bg-olive-900/20"
                       : active
                         ? "text-white bg-white/15"
                         : "text-white/85 hover:text-white hover:bg-white/10",

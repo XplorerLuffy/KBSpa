@@ -34,7 +34,7 @@ export function CategoryFilterBar({
                   "inline-flex rounded-full border px-5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors",
                   isActive
                     ? "border-gold-500 bg-gold-500 text-charcoal-900"
-                    : "border-border bg-card text-muted-foreground hover:border-gold-400 hover:text-gold-700",
+                    : "border-border bg-card text-muted-foreground hover:border-olive-300 hover:bg-olive-50 hover:text-olive-800 dark:hover:bg-olive-900/20 dark:hover:text-olive-200",
                 )}
               >
                 {option.name}

@@ -50,13 +50,13 @@ export default async function HomePage() {
           settings.hero_subtitle ??
           "Premium beauty and wellness treatments tailored just for you."
         }
-        imageUrl={settings.hero_image_url || "/hero.svg"}
-        videoUrl={settings.hero_video_url || "/hero-video.mp4"}
+        imageUrl={settings.hero_image_url}
+        videoUrl={settings.hero_video_url}
       />
 
       <section
         id="featured"
-        className="mx-auto max-w-7xl scroll-mt-24 px-4 py-24 sm:px-6 lg:px-8"
+        className="container-page section scroll-mt-24"
       >
         <SectionHeading
           eyebrow="Our Signature Treatments"
@@ -64,7 +64,7 @@ export default async function HomePage() {
           description="A short list of the treatments our guests come back for."
         />
 
-        <StaggerList className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerList className="mt-12 grid gap-6 sm:mt-16 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
           {featured.map((service) => (
             <StaggerItem key={service.id}>
               <ServiceCard service={service} />
@@ -79,19 +79,19 @@ export default async function HomePage() {
         </FadeIn>
       </section>
 
-      <section className="bg-cream-100 dark:bg-charcoal-800/40 py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="bg-cream-300/60 dark:bg-charcoal-800/40 section">
+        <div className="container-page">
           <SectionHeading
             eyebrow="Why Kuenphen"
             title="Care that feels considered, not rushed"
             description="We keep the day gently booked so every guest gets a full, unhurried appointment."
           />
 
-          <StaggerList className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <StaggerList className="mt-12 grid gap-5 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
             {PILLARS.map(({ icon: Icon, title, body }) => (
               <StaggerItem key={title}>
                 <GlassPanel className="flex h-full flex-col gap-4 p-7">
-                  <span className="bg-gold-100 text-gold-700 flex size-12 items-center justify-center rounded-2xl">
+                  <span className="bg-olive-100 text-olive-700 dark:bg-olive-900/40 dark:text-olive-200 flex size-12 items-center justify-center rounded-2xl">
                     <Icon className="size-5" aria-hidden />
                   </span>
                   <h3 className="font-serif text-lg font-medium">{title}</h3>
@@ -103,20 +103,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <section className="container-page section">
         <SectionHeading
           eyebrow="Browse by Category"
           title="Find exactly what you came for"
         />
 
-        <StaggerList className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerList className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((category) => (
             <StaggerItem key={category.id}>
               <Link
                 href={`/services?category=${category.slug}`}
-                className="border-border/70 bg-card hover:border-gold-400 hover:shadow-soft group flex h-full flex-col gap-2 rounded-2xl border p-6 transition-all"
+                className="border-border/70 bg-card hover:border-olive-300 hover:bg-olive-50/60 dark:hover:bg-olive-900/20 hover:shadow-soft group flex h-full flex-col gap-2 rounded-2xl border p-6 transition-all duration-300"
               >
-                <h3 className="group-hover:text-gold-700 dark:group-hover:text-gold-300 font-serif text-lg font-medium transition-colors">
+                <h3 className="group-hover:text-olive-800 dark:group-hover:text-olive-200 font-serif text-lg font-medium transition-colors">
                   {category.name}
                 </h3>
                 {category.description && (
@@ -131,34 +131,34 @@ export default async function HomePage() {
       </section>
 
       {testimonials.length > 0 && (
-        <section className="bg-olive-800 py-24 text-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="bg-olive-800 section text-white">
+          <div className="container-page">
             <SectionHeading
               inverted
               eyebrow="Guest Stories"
               title="What our guests say"
             />
-            <div className="mt-14">
+            <div className="mt-12 sm:mt-16">
               <TestimonialCarousel testimonials={testimonials} inverted />
             </div>
           </div>
         </section>
       )}
 
-      <section className="mx-auto max-w-5xl px-4 py-24 sm:px-6 lg:px-8">
+      <section className="container-page section max-w-5xl">
         <FadeIn>
-          <GlassPanel className="from-gold-100 via-cream-100 to-beige-100 dark:from-charcoal-800 dark:via-charcoal-800 dark:to-charcoal-900 flex flex-col items-center gap-6 bg-gradient-to-br px-8 py-16 text-center">
+          <GlassPanel className="from-olive-100 via-cream-100 to-cream-300 dark:from-charcoal-800 dark:via-charcoal-800 dark:to-charcoal-900 flex flex-col items-center gap-7 bg-gradient-to-br px-6 py-14 text-center sm:px-10 sm:py-20">
             <SectionHeading
               eyebrow="Ready when you are"
               title="Book your moment of calm"
               description="Pick a treatment, choose your therapist, and see live availability. Confirmation lands in your inbox straight away."
             />
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
               <Button asChild size="lg">
-                <Link href="/booking">Book Appointment</Link>
+                <Link href="/booking">Book appointment</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/contact">Contact Us</Link>
+                <Link href="/contact">Contact us</Link>
               </Button>
             </div>
           </GlassPanel>

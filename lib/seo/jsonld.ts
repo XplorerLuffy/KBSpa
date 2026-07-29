@@ -12,8 +12,10 @@ export function buildLocalBusinessJsonLd(
     name: settings.business_name ?? "Kuenphen Beauty Spa",
     description: settings.tagline,
     url: absoluteUrl(),
-    logo: absoluteUrl("/logo.svg"),
-    image: absoluteUrl("/logo.svg"),
+    // Raster, not SVG: Google's structured-data guidance for organisation
+    // logos and images expects a bitmap format.
+    logo: absoluteUrl(settings.logo_url || "/logo-512.png"),
+    image: absoluteUrl("/og-image.png"),
     telephone: settings.phone,
     email: settings.email,
     address: settings.address

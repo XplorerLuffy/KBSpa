@@ -18,8 +18,6 @@ npm run dev                  # http://localhost:3000
 
 ### Environment variables
 
-| Variable | Where | Notes |
-| --- | --- | --- |
 Three variables are required to run the site — none of them secret:
 
 | Variable | Where | Notes |
@@ -182,6 +180,35 @@ staff (and which treatments each performs), bookings, holidays and vacation days
 opening hours, gallery, testimonials, promotions, and every site setting — business
 name, logo, contact details, social links, hero image/video, about copy, booking slot
 interval, and timezone.
+
+---
+
+## Brand assets & icons
+
+| File | Used for |
+| --- | --- |
+| `public/logo.svg` | Full lock-up — disc, arced wordmark, "SINCE 2020" |
+| `public/icon-mark.svg` | Disc-and-hands only, no text |
+| `app/icon.svg` | Browser icon (copy of the mark) |
+| `app/favicon.ico` | 48/32/16 px, embedded PNGs |
+| `app/apple-icon.png` | 180x180, cream plate (iOS ignores transparency) |
+| `public/icon-192.png`, `public/icon-512.png` | PWA manifest icons |
+| `public/og-image.png` | 1200x630 Open Graph / Twitter card |
+| `public/logo-512.png` | Raster logo for schema.org structured data |
+
+Icons deliberately use the **mark, not the full logo**: the arced wordmark is
+unreadable below roughly 64px, and next to the navbar's HTML wordmark it would
+just be the same words twice. `favicon.ico` leads with its 48px entry because
+Google Search expects a favicon that is a multiple of 48px.
+
+**Replacing the logo.** Two options, neither needing a code change:
+
+1. Admin → **Settings → Logo URL** — point it at any hosted image. Takes effect
+   immediately, no deploy.
+2. Drop replacement files into `public/` using the names above.
+
+If you replace `logo.svg` or `icon-mark.svg`, regenerate the derived PNG/ICO
+files from them so every size stays in sync.
 
 ---
 

@@ -12,7 +12,10 @@ type LogoProps = {
 };
 
 /**
- * Swap point for the brand mark: replace /public/logo.svg to change it everywhere.
+ * Swap point for the brand mark: replace the files in /public to change it
+ * everywhere — `logo.svg` is the full lock-up (disc + arced wordmark) and
+ * `icon-mark.svg` is the disc alone. Admins can also override the logo without
+ * a deploy via Settings → Logo URL.
  */
 export function Logo({
   inverted = false,
@@ -24,7 +27,10 @@ export function Logo({
   const content = (
     <span className={cn("inline-flex items-center gap-3", className)}>
       <Image
-        src="/logo.svg"
+        // Beside the HTML wordmark, use the disc-only mark: the full logo's
+        // arced text would be both unreadable at this size and a duplicate of
+        // the words sitting next to it.
+        src={showWordmark ? "/icon-mark.svg" : "/logo.svg"}
         alt="Kuenphen Beauty Spa"
         width={size}
         height={size}

@@ -40,13 +40,26 @@ export const metadata: Metadata = {
     title: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
     description: "Premium beauty and wellness treatments tailored just for you.",
     url: absoluteUrl(),
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
     description: "Premium beauty and wellness treatments tailored just for you.",
+    images: ["/og-image.png"],
   },
-  icons: { icon: "/logo.svg", apple: "/logo.svg" },
+  // Icons come from the app/ file conventions (favicon.ico, icon.svg,
+  // apple-icon.png), which Next emits with correct sizes and types. The full
+  // logo is not used here: its arced wordmark is unreadable below ~64px, so
+  // icons use the simplified disc-and-hands mark instead.
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {

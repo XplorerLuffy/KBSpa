@@ -7,15 +7,46 @@ import type {
   TestimonialWithService,
 } from "@/types/domain";
 
+/**
+ * Peels off accidental JSON encoding layers.
+ *
+ * A settings value is a jsonb string, so it arrives already decoded. Rows
+ * written before the double-encoding fix hold text that is itself a quoted
+ * JSON string (`"\"+975…\""`), which would otherwise render with visible
+ * quotes. Unwrapping on read means old rows display correctly whether or not
+ * they have been re-saved.
+ */
+export function decodeSettingValue(raw: unknown): string {
+  let value = typeof raw === "string" ? raw : String(raw ?? "");
+
+  for (let i = 0; i < 10; i++) {
+    const trimmed = value.trim();
+    // [\s\S] rather than the /s flag, which needs an es2018+ target.
+    if (!/^"[\s\S]*"$/.test(trimmed)) break;
+    try {
+      const parsed: unknown = JSON.parse(trimmed);
+      if (typeof parsed !== "string" || parsed === value) break;
+      value = parsed;
+    } catch {
+      break;
+    }
+  }
+
+  // Legacy rows can also carry stray escape characters that were never valid
+  // JSON, so trimming them is the only way to recover the original text. Gated
+  // on a backslash being present so a value the admin deliberately typed in
+  // quotes ( He said "hi" ) is left alone.
+  return /\\/.test(value)
+    ? value.replace(/^[\\"\s]+|[\\"\s]+$/g, "")
+    : value;
+}
+
 export async function getSettings(): Promise<SiteSettings> {
   const supabase = await createClient();
   const { data } = await supabase.from("settings").select("key, value");
 
   return Object.fromEntries(
-    (data ?? []).map(({ key, value }) => [
-      key,
-      typeof value === "string" ? value : String(value ?? ""),
-    ]),
+    (data ?? []).map(({ key, value }) => [key, decodeSettingValue(value)]),
   );
 }
 

@@ -390,7 +390,12 @@ export async function saveSettings(formData: FormData): Promise<Result> {
     .filter(([key]) => key.startsWith("setting_"))
     .map(([key, value]) => ({
       key: key.replace("setting_", ""),
-      value: JSON.stringify(String(value)),
+      // Pass the plain string. `value` is jsonb and supabase-js already
+      // JSON-encodes the request body, so calling JSON.stringify here wrapped
+      // the text in a second set of quotes — and because the mangled value was
+      // read back into the form, every save added another layer
+      // (`"+975…"` -> `"\"+975…\""` -> …).
+      value: String(value).trim(),
     }));
 
   if (rows.length === 0) return { ok: true };

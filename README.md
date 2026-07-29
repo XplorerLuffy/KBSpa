@@ -163,8 +163,8 @@ update public.profiles set role = 'admin' where id = (
    wrong host). `SUPABASE_SERVICE_ROLE_KEY` is optional — see `.env.example`.
 2. In Supabase → **Authentication → URL Configuration**, set the Site URL to your
    production domain and add `<domain>/auth/callback` to the redirect allow-list.
-3. Create public Storage buckets for uploaded imagery: `services`, `staff`, `gallery`,
-   `testimonials`, `avatars`.
+3. Storage is created by migration `00000000000003_media_storage.sql` — a single
+   public `media` bucket that the admin panel uploads into. Nothing to click.
 4. Deploy the two Edge Functions and wire the webhook + cron (above).
 5. Deploy. Then walk the golden path: sign up → book → cancel/reschedule from
    `/account` → approve in `/admin/bookings` → check it on the calendar.
@@ -180,6 +180,22 @@ staff (and which treatments each performs), bookings, holidays and vacation days
 opening hours, gallery, testimonials, promotions, and every site setting — business
 name, logo, contact details, social links, hero image/video, about copy, booking slot
 interval, and timezone.
+
+### Images
+
+Every image and video field is an upload control (`MediaField`): choose a file and
+it goes straight to Supabase Storage, with a live preview and a Replace/Remove
+pair. Pasting a URL is still available behind **Use a link**, so records that
+already point at an external image keep working.
+
+Uploads land in the public `media` bucket under a per-feature prefix
+(`logo/`, `hero/`, `services/`, `staff/`, `gallery/`, `testimonials/`,
+`promotions/`, `categories/`). Writes are admin-only via the same `is_admin()`
+helper the rest of the schema uses; reads are public because these are public
+marketing assets. Type, size (10 MB) and destination folder are all validated
+server-side in `features/admin/upload.validation.ts` — the file input's `accept`
+attribute is a convenience, not a control. Filenames are random UUIDs, so two
+uploads of `photo.jpg` cannot overwrite each other.
 
 ---
 

@@ -4,6 +4,7 @@ import { AdminForm } from "@/features/admin/components/AdminForm";
 import { Field, TextareaField } from "@/features/admin/components/Field";
 import { saveSettings } from "@/features/admin/actions";
 import { getSettings } from "@/services/content.service";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export const metadata: Metadata = { title: "Settings", robots: { index: false } };
 
@@ -38,11 +39,12 @@ export default async function AdminSettingsPage() {
               defaultValue={settings.tagline}
             />
           </div>
-          <Field
+          <MediaField
             name="setting_logo_url"
-            label="Logo URL"
+            label="Logo"
+            folder="logo"
             defaultValue={settings.logo_url}
-            hint="Paste a URL to your own logo (any host, or upload to Storage). Leave blank to use the bundled artwork."
+            hint="Leave empty to use the bundled artwork."
           />
 
           <h2 className="mt-4 font-serif text-lg font-medium">Contact</h2>
@@ -87,17 +89,20 @@ export default async function AdminSettingsPage() {
           </div>
 
           <h2 className="mt-4 font-serif text-lg font-medium">Homepage & about</h2>
-          <Field
+          <MediaField
             name="setting_hero_image_url"
-            label="Hero background image URL"
+            label="Hero background image"
+            folder="hero"
             defaultValue={settings.hero_image_url}
-            hint="Leave blank to use the bundled artwork."
+            hint="Leave empty to use the bundled artwork."
           />
-          <Field
+          <MediaField
             name="setting_hero_video_url"
-            label="Hero background video URL"
+            label="Hero background video"
+            folder="hero"
+            accept="video/mp4,video/webm"
             defaultValue={settings.hero_video_url}
-            hint="Optional. MP4, looping, no audio. Leave blank to use the bundled animation. Ignored when a visitor has reduced-motion enabled."
+            hint="Optional. Looping MP4, no audio. Leave empty to use the bundled animation. Skipped for visitors who prefer reduced motion."
           />
           <Field
             name="setting_hero_subtitle"

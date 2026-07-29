@@ -4,6 +4,7 @@ import { AdminForm } from "@/features/admin/components/AdminForm";
 import { CheckboxField, Field, TextareaField } from "@/features/admin/components/Field";
 import { saveStaff } from "@/features/admin/actions";
 import type { Service, Staff } from "@/types/domain";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export function StaffForm({
   services,
@@ -39,10 +40,10 @@ export function StaffForm({
       <TextareaField name="bio" label="Bio" rows={4} defaultValue={staff?.bio ?? ""} />
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field
+        <MediaField
           name="photo_url"
-          label="Photo URL"
-          type="url"
+          label="Photo"
+          folder="staff"
           defaultValue={staff?.photo_url ?? ""}
         />
         <Field

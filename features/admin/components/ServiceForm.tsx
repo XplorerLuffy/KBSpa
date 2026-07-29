@@ -9,6 +9,7 @@ import {
 } from "@/features/admin/components/Field";
 import { saveService } from "@/features/admin/actions";
 import type { Category, Service } from "@/types/domain";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export function ServiceForm({
   categories,
@@ -95,12 +96,11 @@ export function ServiceForm({
         />
       </div>
 
-      <Field
+      <MediaField
         name="image_url"
-        label="Image URL"
-        type="url"
+        label="Image"
+        folder="services"
         defaultValue={service?.image_url ?? ""}
-        hint="Paste a public image URL, or upload to Supabase Storage and paste that link."
       />
 
       <div className="flex flex-wrap gap-6">

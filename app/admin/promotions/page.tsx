@@ -13,6 +13,7 @@ import {
 } from "@/features/admin/components/Field";
 import { deletePromotion, savePromotion } from "@/features/admin/actions";
 import { createClient } from "@/lib/supabase/server";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export const metadata: Metadata = { title: "Promotions", robots: { index: false } };
 
@@ -57,7 +58,11 @@ export default async function AdminPromotionsPage() {
               <Field name="starts_at" label="Starts" type="datetime-local" />
               <Field name="ends_at" label="Ends" type="datetime-local" />
             </div>
-            <Field name="banner_image_url" label="Banner image URL" type="url" />
+            <MediaField
+              name="banner_image_url"
+              label="Banner image"
+              folder="promotions"
+            />
             <CheckboxField name="is_active" label="Active" />
           </AdminForm>
         </Card>

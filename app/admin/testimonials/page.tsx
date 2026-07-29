@@ -13,6 +13,7 @@ import {
 } from "@/features/admin/components/Field";
 import { deleteTestimonial, saveTestimonial } from "@/features/admin/actions";
 import { createClient } from "@/lib/supabase/server";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export const metadata: Metadata = { title: "Testimonials", robots: { index: false } };
 
@@ -62,7 +63,7 @@ export default async function AdminTestimonialsPage() {
                 label: service.name,
               }))}
             />
-            <Field name="avatar_url" label="Photo URL" type="url" />
+            <MediaField name="avatar_url" label="Photo" folder="testimonials" />
             <div className="flex flex-wrap gap-6">
               <CheckboxField name="is_approved" label="Approved" defaultChecked />
               <CheckboxField name="is_featured" label="Feature on homepage" />

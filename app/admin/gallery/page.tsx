@@ -7,6 +7,7 @@ import { AdminForm, DeleteButton } from "@/features/admin/components/AdminForm";
 import { CheckboxField, Field } from "@/features/admin/components/Field";
 import { deleteGalleryItem, saveGalleryItem } from "@/features/admin/actions";
 import { createClient } from "@/lib/supabase/server";
+import { MediaField } from "@/features/admin/components/MediaField";
 
 export const metadata: Metadata = { title: "Gallery", robots: { index: false } };
 
@@ -34,13 +35,7 @@ export default async function AdminGalleryPage() {
             submitLabel="Add image"
             successMessage="Image added"
           >
-            <Field
-              name="image_url"
-              label="Image URL"
-              type="url"
-              required
-              hint="Upload to Supabase Storage, then paste the public URL."
-            />
+            <MediaField name="image_url" label="Image" folder="gallery" />
             <Field name="caption" label="Caption" />
             <Field
               name="category"

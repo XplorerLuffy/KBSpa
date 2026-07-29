@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  type HTMLMotionProps,
+} from "framer-motion";
 
 const container = {
   hidden: {},
@@ -16,13 +22,34 @@ const item = {
   },
 };
 
+/**
+ * Scroll-reveal grid whose children animate in on a stagger.
+ *
+ * Deliberately driven by `useInView` + a declarative `animate`, *not* by
+ * `whileInView`. `whileInView` is a one-shot gesture: with `once: true` it
+ * fires, detaches its observer, and never speaks to the subtree again. That
+ * breaks any list whose contents change without the component unmounting —
+ * filtering the services or gallery grid swaps in fresh children that mount
+ * into the parent's `initial="hidden"` (opacity 0) and are never told to show,
+ * so the results render but stay invisible.
+ *
+ * `animate` is a prop, so React re-applies it on every render and newly mounted
+ * children animate from `hidden` to the parent's current variant.
+ */
 export function StaggerList({ children, ...props }: HTMLMotionProps<"div">) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const reduceMotion = useReducedMotion();
+
+  // Never gate visibility on an animation the user has asked us not to run.
+  const state = reduceMotion || inView ? "show" : "hidden";
+
   return (
     <motion.div
+      ref={ref}
       variants={container}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
+      animate={state}
       {...props}
     >
       {children}

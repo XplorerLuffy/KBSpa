@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { setAppointmentStatus } from "@/features/admin/actions";
 import { APPOINTMENT_STATUSES, STATUS_LABELS, type AppointmentStatus } from "@/lib/constants";
+import { runAction } from "@/lib/run-action";
 
 export function BookingActions({
   id,
@@ -28,7 +29,8 @@ export function BookingActions({
 
   const update = (next: AppointmentStatus) =>
     startTransition(async () => {
-      const result = await setAppointmentStatus(id, next);
+      const result = await runAction(() => setAppointmentStatus(id, next));
+      if (!result) return;
       if (result.ok) {
         toast.success(`Marked as ${STATUS_LABELS[next].toLowerCase()}`);
         router.refresh();

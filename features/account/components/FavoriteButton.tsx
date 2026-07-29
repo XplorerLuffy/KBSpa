@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { toggleFavorite } from "@/features/account/actions";
 import { cn } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 export function FavoriteButton({
   serviceId,
@@ -28,7 +29,8 @@ export function FavoriteButton({
     }
 
     startTransition(async () => {
-      const result = await toggleFavorite(serviceId);
+      const result = await runAction(() => toggleFavorite(serviceId));
+      if (!result) return;
       if (result.ok) {
         setFavorited(result.favorited);
         toast.success(result.favorited ? "Added to favourites" : "Removed from favourites");

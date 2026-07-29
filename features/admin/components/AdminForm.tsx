@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { runAction } from "@/lib/run-action";
 
 type Result = { ok: true } | { ok: false; error: string };
 
@@ -38,7 +39,8 @@ export function AdminForm({
         const form = event.currentTarget;
 
         startTransition(async () => {
-          const result = await action(formData);
+          const result = await runAction(() => action(formData));
+          if (!result) return; // already reported by runAction
           if (result.ok) {
             toast.success(successMessage);
             onDone?.();
@@ -82,7 +84,8 @@ export function DeleteButton({
       onClick={() => {
         if (!window.confirm(confirmMessage)) return;
         startTransition(async () => {
-          const result = await action();
+          const result = await runAction(() => action());
+          if (!result) return; // already reported by runAction
           if (result.ok) {
             toast.success("Deleted");
             router.refresh();

@@ -9,7 +9,7 @@
     "lint": "eslint",
     "remotion:studio": "remotion studio remotion/src/index.ts",
     "remotion:render": "remotion render remotion/src/index.ts HeroBackground public/hero-video.mp4",
-    "test": "node services/content.service.test.mjs && node features/admin/upload.validation.test.mjs"
+    "test": "node services/content.service.test.mjs && node features/admin/upload.validation.test.mjs && node lib/run-action.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

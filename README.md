@@ -190,12 +190,21 @@ already point at an external image keep working.
 
 Uploads land in the public `media` bucket under a per-feature prefix
 (`logo/`, `hero/`, `services/`, `staff/`, `gallery/`, `testimonials/`,
-`promotions/`, `categories/`). Writes are admin-only via the same `is_admin()`
-helper the rest of the schema uses; reads are public because these are public
-marketing assets. Type, size (10 MB) and destination folder are all validated
-server-side in `features/admin/upload.validation.ts` — the file input's `accept`
-attribute is a convenience, not a control. Filenames are random UUIDs, so two
-uploads of `photo.jpg` cannot overwrite each other.
+`promotions/`, `categories/`). Filenames are random UUIDs, so two uploads of
+`photo.jpg` cannot overwrite each other.
+
+The file goes **straight from the browser to Supabase Storage**, not through a
+server action. Server actions cap request bodies at 1 MB and Vercel's functions
+at roughly 4.5 MB, so posting a photo through one fails with
+`Body exceeded 1 MB limit` for anything larger than a thumbnail. Going direct
+also avoids streaming every upload through the server.
+
+That places no trust in the browser. Writes are admin-only through the same
+`is_admin()` helper the rest of the schema uses, enforced by storage RLS, and
+the bucket enforces its own mime-type allow-list and 10 MB ceiling. Reads are
+public because these are public marketing assets. `upload.validation.ts` mirrors
+those rules client-side purely so the user gets an instant message instead of a
+failed request.
 
 ---
 

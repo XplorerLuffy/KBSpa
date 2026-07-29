@@ -1,13 +1,16 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { ImagePlus, Link2, Loader2, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { uploadMedia } from "@/features/admin/upload.actions";
+import { createClient } from "@/lib/supabase/client";
+import { buildObjectPath, checkUpload } from "@/features/admin/upload.validation";
+
+const BUCKET = "media";
 
 /**
  * Upload control for any image/video setting.
@@ -16,6 +19,16 @@ import { uploadMedia } from "@/features/admin/upload.actions";
  * hidden input, so the surrounding AdminForm keeps submitting a plain string
  * exactly as it did when this was a URL text box — no server action needed
  * changing.
+ *
+ * The file goes straight from the browser to Supabase Storage rather than
+ * through a server action. Server actions cap request bodies at 1 MB (and
+ * Vercel's functions at ~4.5 MB), so routing a photo through one fails with
+ * "Body exceeded 1 MB limit" for anything but a thumbnail. Going direct also
+ * avoids paying to stream every upload through the server.
+ *
+ * Security is unchanged by this: storage RLS still allows writes only to
+ * admins, and the bucket enforces its own mime-type and 10 MB size limits, so
+ * neither control depends on the browser behaving.
  *
  * Pasting a URL is still offered behind a toggle: existing records already hold
  * external URLs, and the salon may want to point at an image hosted elsewhere.
@@ -38,29 +51,47 @@ export function MediaField({
 }) {
   const [url, setUrl] = useState(defaultValue ?? "");
   const [showUrlInput, setShowUrlInput] = useState(false);
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isVideo = /\.(mp4|webm)(\?|$)/i.test(url);
 
-  function handleFile(file: File | undefined) {
+  async function handleFile(file: File | undefined) {
     if (!file) return;
 
-    startTransition(async () => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", folder);
+    // Checked again by the bucket itself; this is just immediate feedback.
+    const check = checkUpload(file.type, file.size);
+    if (!check.ok) {
+      toast.error(check.error);
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
 
-      const result = await uploadMedia(formData);
-      if (result.ok) {
-        setUrl(result.url);
-        toast.success("Uploaded");
-      } else {
-        toast.error(result.error);
+    setPending(true);
+    try {
+      const supabase = createClient();
+      const path = buildObjectPath(folder, check.extension);
+
+      const { error } = await supabase.storage
+        .from(BUCKET)
+        .upload(path, file, { contentType: file.type, upsert: false });
+
+      if (error) {
+        // Most likely causes: signed out, or not an admin (storage RLS).
+        toast.error(error.message || "Upload failed. Please try again.");
+        return;
       }
+
+      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      setUrl(data.publicUrl);
+      toast.success("Uploaded");
+    } catch {
+      toast.error("Upload failed. Check your connection and try again.");
+    } finally {
+      setPending(false);
       // Allow re-picking the same file after a failure.
       if (fileRef.current) fileRef.current.value = "";
-    });
+    }
   }
 
   return (

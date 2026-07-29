@@ -1,0 +1,23 @@
+{
+  "name": "kbspa-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kuenphen Beauty Spa — desktop admin",
+  "author": "Kuenphen Beauty Spa",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "cross-env KBSPA_URL=http://localhost:3000 electron .",
+    "build:win": "electron-builder --win --publish never",
+    "build:dir": "electron-builder --dir --publish never",
+    "test": "node test/smoke.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.9"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3"
+  }
+}

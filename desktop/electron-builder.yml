@@ -1,0 +1,31 @@
+appId: com.kuenphenbeautyspa.admin
+productName: Kuenphen Admin
+copyright: Kuenphen Beauty Spa
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - src/**/*
+  - build/icon.png
+  - package.json
+  - "!**/*.map"
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+  # Unsigned builds trigger a SmartScreen warning on first run. See README for
+  # how to point this at a real code-signing certificate.
+  signAndEditExecutable: true
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Kuenphen Admin
+  artifactName: KuenphenAdmin-Setup-${version}.${ext}

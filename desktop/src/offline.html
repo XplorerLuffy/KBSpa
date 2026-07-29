@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kuenphen Beauty Spa — Offline</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 50% 0%, #fdfbf7 0%, #f0e8da 60%, #e5d9c3 100%);
+        color: #2c2926;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      main {
+        text-align: center;
+        padding: 2.5rem;
+        max-width: 26rem;
+      }
+      .dot {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 0 auto 1.75rem;
+        border-radius: 50%;
+        background: #d4af37;
+        opacity: 0.85;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.85;
+        }
+        50% {
+          transform: scale(1.08);
+          opacity: 0.5;
+        }
+      }
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        font-size: 1.65rem;
+        margin: 0 0 0.75rem;
+      }
+      p {
+        margin: 0 0 1.75rem;
+        line-height: 1.6;
+        color: #4a4540;
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.7rem 1.9rem;
+        background: #d4af37;
+        color: #1c1a18;
+        cursor: pointer;
+        transition: filter 0.15s ease;
+      }
+      button:hover {
+        filter: brightness(1.07);
+      }
+      button:focus-visible {
+        outline: 3px solid #937024;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="dot"></div>
+      <h1>No connection</h1>
+      <p>
+        The admin panel needs an internet connection. Check your network and try
+        again — nothing has been lost.
+      </p>
+      <button id="retry" autofocus>Try again</button>
+    </main>
+    <script>
+      document.getElementById("retry").addEventListener("click", () => {
+        window.kbspa?.retry();
+      });
+      window.addEventListener("online", () => window.kbspa?.retry());
+    </script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import path from "node:path";
 import { Config } from "@remotion/cli/config";
 
-// Reuse the app's existing /public folder (logo.svg etc.) instead of duplicating assets.
+// Reuse the app's existing /public folder (icon-mark.png etc.) instead of duplicating assets.
 Config.setPublicDir(path.join(__dirname, "..", "public"));
 
 // This container has Chromium and ffmpeg pre-installed; point Remotion at them

@@ -18,8 +18,8 @@ type LogoProps = {
 
 /**
  * Swap point for the brand mark: replace the files in /public to change it
- * everywhere — `logo.svg` is the full lock-up (disc + arced wordmark) and
- * `icon-mark.svg` is the disc alone. Admins can also override the logo without
+ * everywhere — `logo.png` is the full lock-up (disc + arced wordmark) and
+ * `icon-mark.png` is the disc alone. Admins can also override the logo without
  * a deploy via Settings → Logo URL.
  */
 export function Logo({
@@ -33,7 +33,7 @@ export function Logo({
   // Beside the HTML wordmark, the bundled fallback is the disc-only mark: the
   // full logo's arced text would be unreadable at this size and a duplicate of
   // the words sitting next to it. An admin-supplied logo always wins.
-  const source = src?.trim() || (showWordmark ? "/icon-mark.svg" : "/logo.svg");
+  const source = src?.trim() || (showWordmark ? "/icon-mark.png" : "/logo.png");
   // An admin can paste a URL on any host, which next/image would otherwise
   // reject unless that host is in remotePatterns. Skip optimisation for remote
   // sources so any URL just works.

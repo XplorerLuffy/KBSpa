@@ -187,9 +187,9 @@ interval, and timezone.
 
 | File | Used for |
 | --- | --- |
-| `public/logo.svg` | Full lock-up — disc, arced wordmark, "SINCE 2020" |
-| `public/icon-mark.svg` | Disc-and-hands only, no text |
-| `app/icon.svg` | Browser icon (copy of the mark) |
+| `public/logo.png` | Full lock-up — disc, arced wordmark, "SINCE 2020". Transparent background |
+| `public/icon-mark.png` | Disc-and-hands only, circular, transparent |
+| `app/icon.png` | Browser icon (copy of the mark) |
 | `app/favicon.ico` | 48/32/16 px, embedded PNGs |
 | `app/apple-icon.png` | 180x180, cream plate (iOS ignores transparency) |
 | `public/icon-192.png`, `public/icon-512.png` | PWA manifest icons |
@@ -207,8 +207,12 @@ Google Search expects a favicon that is a multiple of 48px.
    immediately, no deploy.
 2. Drop replacement files into `public/` using the names above.
 
-If you replace `logo.svg` or `icon-mark.svg`, regenerate the derived PNG/ICO
-files from them so every size stays in sync.
+All of these are derived from the client's original 4096px artwork, which is
+preserved in git history (commit `6177934`). The background was removed with a
+flood fill seeded from the image border rather than a global white key — the
+hands inside the disc are white too, so keying white out globally would erase
+them. If the logo is ever replaced, regenerate the derived files so every size
+stays in sync.
 
 ---
 
@@ -216,7 +220,7 @@ files from them so every size stays in sync.
 
 The homepage hero plays a looping ambient MP4 (`public/hero-video.mp4`) over the still
 image, generated with [Remotion](https://remotion.dev) — brand-colored gradient, drifting
-gold/olive bokeh, and a faint rotating watermark of `public/logo.svg`. Source lives in
+gold/olive bokeh, and a faint rotating watermark of `public/icon-mark.png`. Source lives in
 `remotion/`. To re-render after tweaking it:
 
 ```bash

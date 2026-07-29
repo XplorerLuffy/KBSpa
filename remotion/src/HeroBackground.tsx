@@ -119,7 +119,7 @@ export function HeroBackground() {
         }}
       >
         <Img
-          src={staticFile("logo.svg")}
+          src={staticFile("icon-mark.png")}
           style={{ width: 620, height: 620, opacity: logoOpacity }}
         />
       </AbsoluteFill>

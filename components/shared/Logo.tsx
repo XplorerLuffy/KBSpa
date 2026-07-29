@@ -9,6 +9,11 @@ type LogoProps = {
   className?: string;
   href?: string | null;
   size?: number;
+  /**
+   * Overrides the bundled artwork — pass `settings.logo_url` so the salon can
+   * swap its logo from Admin → Settings without a code change or deploy.
+   */
+  src?: string | null;
 };
 
 /**
@@ -23,19 +28,28 @@ export function Logo({
   className,
   href = "/",
   size = 44,
+  src,
 }: LogoProps) {
+  // Beside the HTML wordmark, the bundled fallback is the disc-only mark: the
+  // full logo's arced text would be unreadable at this size and a duplicate of
+  // the words sitting next to it. An admin-supplied logo always wins.
+  const source = src?.trim() || (showWordmark ? "/icon-mark.svg" : "/logo.svg");
+  // An admin can paste a URL on any host, which next/image would otherwise
+  // reject unless that host is in remotePatterns. Skip optimisation for remote
+  // sources so any URL just works.
+  const isRemote = /^https?:\/\//i.test(source);
+
   const content = (
     <span className={cn("inline-flex items-center gap-3", className)}>
       <Image
-        // Beside the HTML wordmark, use the disc-only mark: the full logo's
-        // arced text would be both unreadable at this size and a duplicate of
-        // the words sitting next to it.
-        src={showWordmark ? "/icon-mark.svg" : "/logo.svg"}
+        src={source}
         alt="Kuenphen Beauty Spa"
         width={size}
         height={size}
         priority
-        className="shrink-0"
+        unoptimized={isRemote}
+        className="h-auto w-auto shrink-0 object-contain"
+        style={{ maxHeight: size, maxWidth: size }}
       />
       {showWordmark && (
         <span className="flex flex-col leading-none">

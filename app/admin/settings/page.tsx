@@ -42,7 +42,7 @@ export default async function AdminSettingsPage() {
             name="setting_logo_url"
             label="Logo URL"
             defaultValue={settings.logo_url}
-            hint="Defaults to the bundled /logo.svg."
+            hint="Paste a URL to your own logo (any host, or upload to Storage). Leave blank to use the bundled artwork."
           />
 
           <h2 className="mt-4 font-serif text-lg font-medium">Contact</h2>

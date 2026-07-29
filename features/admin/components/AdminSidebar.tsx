@@ -114,11 +114,17 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function AdminSidebar({ name }: { name: string }) {
+export function AdminSidebar({
+  name,
+  logoUrl,
+}: {
+  name: string;
+  logoUrl?: string | null;
+}) {
   return (
     <>
       <aside className="bg-card border-border/70 hidden w-64 shrink-0 flex-col gap-8 border-r px-4 py-6 lg:flex">
-        <Logo href="/admin" />
+        <Logo href="/admin" src={logoUrl} />
         <nav aria-label="Admin" className="flex-1 overflow-y-auto">
           <NavLinks />
         </nav>
@@ -137,7 +143,7 @@ export function AdminSidebar({ name }: { name: string }) {
       </aside>
 
       <div className="bg-card border-border/70 fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b px-4 py-3 lg:hidden">
-        <Logo href="/admin" size={36} />
+        <Logo href="/admin" size={36} src={logoUrl} />
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" aria-label="Open admin menu">

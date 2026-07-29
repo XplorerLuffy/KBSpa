@@ -19,7 +19,7 @@ export default async function MarketingLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <JsonLd data={buildLocalBusinessJsonLd(settings, hours)} />
-      <Navbar isAuthenticated={Boolean(user)} />
+      <Navbar isAuthenticated={Boolean(user)} logoUrl={settings.logo_url} />
       <main id="main" className="flex-1">
         {children}
       </main>

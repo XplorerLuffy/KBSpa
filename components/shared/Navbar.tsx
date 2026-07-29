@@ -16,7 +16,13 @@ import {
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-export function Navbar({ isAuthenticated }: { isAuthenticated: boolean }) {
+export function Navbar({
+  isAuthenticated,
+  logoUrl,
+}: {
+  isAuthenticated: boolean;
+  logoUrl?: string | null;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
@@ -44,7 +50,7 @@ export function Navbar({ isAuthenticated }: { isAuthenticated: boolean }) {
         aria-label="Main"
         className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
       >
-        <Logo inverted={!solid} />
+        <Logo inverted={!solid} src={logoUrl} />
 
         <ul className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {
@@ -116,7 +122,7 @@ export function Navbar({ isAuthenticated }: { isAuthenticated: boolean }) {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetTitle className="sr-only">Menu</SheetTitle>
-              <Logo href="/" className="mb-4" />
+              <Logo href="/" className="mb-4" src={logoUrl} />
               <ul className="flex flex-col gap-1">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>

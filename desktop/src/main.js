@@ -107,6 +107,24 @@ function createWindow() {
     }
   });
 
+  // Same-origin links (e.g. the login screen's "Back to site") aren't caught
+  // by will-navigate at all when Next.js handles them client-side — those are
+  // History API pushes, not real navigations, so did-navigate-in-page is what
+  // actually sees them. Anything that lands outside /admin (or the auth
+  // screens needed to reach it) bounces straight back: this is meant to be
+  // an admin-only window, not a second browser onto the public site.
+  const snapBackToAdmin = (_event, url) => {
+    let pathname;
+    try {
+      pathname = new URL(url).pathname;
+    } catch {
+      return;
+    }
+    if (!config.isAdminPath(pathname)) loadAdmin();
+  };
+  mainWindow.webContents.on("did-navigate", snapBackToAdmin);
+  mainWindow.webContents.on("did-navigate-in-page", snapBackToAdmin);
+
   loadAdmin();
   return mainWindow;
 }

@@ -26,11 +26,21 @@ function projectRefFrom(url) {
   return match ? match[1] : null;
 }
 
+// This window only ever shows the admin panel and the auth screens needed to
+// reach it — never the public marketing site, the customer account area, or
+// booking flow, even though they live on the same domain.
+const ADMIN_PATHS = ["/admin", "/login", "/signup", "/forgot-password", "/reset-password", "/auth/callback"];
+
+function isAdminPath(pathname) {
+  return ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 module.exports = {
   siteUrl,
   adminUrl: `${siteUrl}/admin`,
   loginUrl: `${siteUrl}/login`,
   allowedOrigin: new URL(siteUrl).origin,
+  isAdminPath,
   supabaseUrl,
   supabaseAnonKey,
   supabaseProjectRef: projectRefFrom(supabaseUrl),

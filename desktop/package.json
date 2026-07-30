@@ -4,6 +4,11 @@
   "private": true,
   "description": "Kuenphen Beauty Spa — desktop admin",
   "author": "Kuenphen Beauty Spa",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XplorerLuffy/KBSpa.git",
+    "directory": "desktop"
+  },
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",

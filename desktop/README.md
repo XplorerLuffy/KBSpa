@@ -15,6 +15,10 @@ What the desktop build adds over a browser tab:
   keep arriving; quitting is explicit.
 - **Remembers its window** size, position and maximised state.
 - **Offline screen** instead of a browser error page, with a retry button.
+- **Updates itself.** Checks GitHub Releases for a newer build every few
+  hours and at launch, downloads it in the background, and prompts to
+  restart — nobody has to reinstall by hand again. See
+  [Auto-updates](#auto-updates) for how to ship one.
 
 ---
 
@@ -79,6 +83,43 @@ decision for the salon — the app works fine without one.
 
 ---
 
+## Auto-updates
+
+Installed copies check GitHub Releases for a newer version — at launch and
+every 4 hours after — download it in the background, and ask to restart once
+it's ready ("Restart now" / "Later"; if you pick Later it installs on the next
+normal quit instead). There's also **Help → Check for updates** to check on
+demand.
+
+**To ship an update, tag a release — that's the only step that matters:**
+
+1. Bump the version in `desktop/package.json` (e.g. `1.0.0` → `1.0.1`) and
+   commit it. Installed copies compare against this number, so a build
+   without a version bump is invisible to them.
+2. Tag it and push the tag:
+   ```bash
+   git tag desktop-v1.0.1
+   git push origin desktop-v1.0.1
+   ```
+3. That triggers `.github/workflows/desktop-build.yml`, which builds on a real
+   Windows runner and attaches three files to the GitHub release: the
+   installer, `latest.yml`, and a `.blockmap`. **All three are required** —
+   `latest.yml` is the update feed electron-updater reads to know a newer
+   version exists, and the `.blockmap` lets it download just the changed
+   bytes instead of the whole installer again.
+
+Running `npm run build:win` locally (or the *Run workflow* button without a
+tag) still produces a working installer, but doesn't publish anywhere —
+existing installs have nothing to check against, so nobody auto-updates from
+it. The tag is what makes a build "the current version."
+
+A first-time manual install still needs the SmartScreen click-through above;
+auto-updates that follow do not re-trigger it in most cases, since Windows'
+reputation check is mainly about the first time a binary is ever run on that
+machine.
+
+---
+
 ## Configuration
 
 Defaults are baked in; override with environment variables when needed.
@@ -133,6 +174,7 @@ src/config.js          URLs, keys, tray/menu sections
 src/session.js         Recovers the Supabase token from window cookies
 src/bookingWatcher.js  Realtime subscription + native notifications
 src/tray.js            Tray icon, pending-booking badge
+src/updater.js         Checks GitHub Releases, downloads and installs updates
 src/windowState.js     Remembers window size/position
 src/preload.js         Minimal renderer bridge
 src/offline.html       Shown when the network is unavailable

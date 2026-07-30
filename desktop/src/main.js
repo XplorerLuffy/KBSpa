@@ -7,6 +7,7 @@ const config = require("./config");
 const windowState = require("./windowState");
 const tray = require("./tray");
 const bookingWatcher = require("./bookingWatcher");
+const updater = require("./updater");
 
 let mainWindow = null;
 let pendingCount = 0;
@@ -161,6 +162,8 @@ function buildAppMenu() {
           label: "Open in browser",
           click: () => shell.openExternal(config.adminUrl),
         },
+        { label: "Check for updates", click: () => updater.checkForUpdates() },
+        { type: "separator" },
         {
           label: "About",
           click: () =>
@@ -185,6 +188,7 @@ app.whenReady().then(() => {
 
   const handlers = { onShow: showWindow, onOpenSection: openSection };
   tray.create(handlers);
+  updater.start();
 
   // Notifications are the reason this is a desktop app rather than a bookmark.
   bookingWatcher.start({
@@ -205,6 +209,7 @@ app.on("before-quit", () => {
   quitting = true;
   bookingWatcher.stop();
   tray.destroy();
+  updater.stop();
 });
 
 // The tray keeps the app running after the last window closes.

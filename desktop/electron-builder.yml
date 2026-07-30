@@ -2,6 +2,18 @@ appId: com.kuenphenbeautyspa.admin
 productName: Kuenphen Admin
 copyright: Kuenphen Beauty Spa
 
+# Tells electron-builder where the update feed lives, so it (a) embeds
+# resources/app-update.yml into the packaged app for electron-updater to read
+# at runtime, and (b) generates dist/latest.yml alongside the installer. The
+# CI workflow uploads both the installer and latest.yml to the GitHub Release
+# it creates; electron-updater never publishes anything itself here (the
+# build script always runs with --publish never).
+publish:
+  provider: github
+  owner: XplorerLuffy
+  repo: KBSpa
+  releaseType: release
+
 directories:
   output: dist
   buildResources: build

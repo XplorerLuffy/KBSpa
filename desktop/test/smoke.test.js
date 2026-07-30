@@ -25,6 +25,10 @@ const electronMock = {
   app: {
     getPath: () => TMP,
     getVersion: () => "1.0.0",
+    // false, as in any real dev run via `electron .` — the updater module
+    // must no-op entirely against this rather than try to load
+    // electron-updater, which expects a packaged app-update.yml to exist.
+    isPackaged: false,
     requestSingleInstanceLock: () => true,
     quit: fn("app.quit"),
     whenReady: () => ({ then: () => {} }),
@@ -252,6 +256,25 @@ console.log("\npreload.js");
 check("exposes the kbspa bridge", () => {
   require(path.join(DESKTOP, "src/preload.js"));
   assert.ok(calls.includes("contextBridge.expose"));
+});
+
+console.log("\nupdater.js");
+const updater = require(path.join(DESKTOP, "src/updater.js"));
+check("exports start/stop/checkForUpdates/isUpdateDownloaded", () => {
+  assert.strictEqual(typeof updater.start, "function");
+  assert.strictEqual(typeof updater.stop, "function");
+  assert.strictEqual(typeof updater.checkForUpdates, "function");
+  assert.strictEqual(typeof updater.isUpdateDownloaded, "function");
+});
+check("no-ops against a dev (unpackaged) build instead of requiring electron-updater", () => {
+  // electron-updater is never mocked, so if start() tried to load it here
+  // against our fake `electron` module, this would throw.
+  updater.start();
+  assert.strictEqual(updater.isUpdateDownloaded(), false);
+});
+check("checkForUpdates and stop are safe no-ops before/without start", () => {
+  updater.checkForUpdates();
+  updater.stop();
 });
 
 Promise.all(pending).then(() => setTimeout(() => {

@@ -19,7 +19,7 @@ export function SignupForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignupValues>({ resolver: zodResolver(signupSchema) });
+  } = useForm<SignupValues>({ resolver: zodResolver(signupSchema), mode: "onBlur" });
 
   const onSubmit = async (values: SignupValues) => {
     const result = await signUp(values);
@@ -59,7 +59,9 @@ export function SignupForm() {
           aria-invalid={Boolean(errors.fullName)}
         />
         {errors.fullName && (
-          <p className="text-destructive text-xs">{errors.fullName.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.fullName.message}
+          </p>
         )}
       </div>
 
@@ -73,7 +75,9 @@ export function SignupForm() {
           aria-invalid={Boolean(errors.email)}
         />
         {errors.email && (
-          <p className="text-destructive text-xs">{errors.email.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
@@ -87,7 +91,9 @@ export function SignupForm() {
           aria-invalid={Boolean(errors.phone)}
         />
         {errors.phone && (
-          <p className="text-destructive text-xs">{errors.phone.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.phone.message}
+          </p>
         )}
       </div>
 
@@ -101,7 +107,9 @@ export function SignupForm() {
           aria-invalid={Boolean(errors.password)}
         />
         {errors.password && (
-          <p className="text-destructive text-xs">{errors.password.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
@@ -115,7 +123,9 @@ export function SignupForm() {
           aria-invalid={Boolean(errors.confirmPassword)}
         />
         {errors.confirmPassword && (
-          <p className="text-destructive text-xs">{errors.confirmPassword.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 

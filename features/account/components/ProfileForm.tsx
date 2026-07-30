@@ -27,6 +27,7 @@ export function ProfileForm({
   } = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
     defaultValues,
+    mode: "onBlur",
   });
 
   return (
@@ -51,7 +52,9 @@ export function ProfileForm({
         <Label htmlFor="full_name">Full name</Label>
         <Input id="full_name" {...register("full_name")} />
         {errors.full_name && (
-          <p className="text-destructive text-xs">{errors.full_name.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.full_name.message}
+          </p>
         )}
       </div>
 

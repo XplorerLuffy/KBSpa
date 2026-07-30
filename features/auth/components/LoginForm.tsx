@@ -21,7 +21,7 @@ export function LoginForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), mode: "onBlur" });
 
   const onSubmit = async (values: LoginValues) => {
     const result = await signIn(values);
@@ -46,7 +46,9 @@ export function LoginForm() {
           aria-invalid={Boolean(errors.email)}
         />
         {errors.email && (
-          <p className="text-destructive text-xs">{errors.email.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
@@ -68,7 +70,9 @@ export function LoginForm() {
           aria-invalid={Boolean(errors.password)}
         />
         {errors.password && (
-          <p className="text-destructive text-xs">{errors.password.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.password.message}
+          </p>
         )}
       </div>
 

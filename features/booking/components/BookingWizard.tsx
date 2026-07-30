@@ -105,6 +105,7 @@ export function BookingWizard({
 
   const detailsForm = useForm<BookingDetailsValues>({
     resolver: zodResolver(bookingDetailsSchema),
+    mode: "onBlur",
     defaultValues: {
       name: state.name || defaultProfile?.name || "",
       email: state.email || defaultProfile?.email || "",
@@ -160,7 +161,7 @@ export function BookingWizard({
                   setStep(1);
                 }}
                 className={cn(
-                  "border-border hover:border-gold-400 hover:shadow-soft flex flex-col gap-2 rounded-2xl border p-5 text-left transition-all",
+                  "border-border hover:border-gold-400 hover:shadow-soft flex cursor-pointer flex-col gap-2 rounded-2xl border p-5 text-left transition-all",
                   state.serviceId === item.id && "border-gold-500 bg-gold-50",
                 )}
               >
@@ -200,7 +201,7 @@ export function BookingWizard({
                   setStep(2);
                 }}
                 className={cn(
-                  "border-border hover:border-gold-400 hover:shadow-soft flex items-center gap-4 rounded-2xl border p-5 text-left transition-all",
+                  "border-border hover:border-gold-400 hover:shadow-soft flex cursor-pointer items-center gap-4 rounded-2xl border p-5 text-left transition-all",
                   state.staffId === person.id && "border-gold-500 bg-gold-50",
                 )}
               >
@@ -234,7 +235,7 @@ export function BookingWizard({
                     setStep(3);
                   }}
                   className={cn(
-                    "border-border hover:border-gold-400 flex flex-col items-center gap-1 rounded-2xl border px-2 py-4 transition-all",
+                    "border-border hover:border-gold-400 flex cursor-pointer flex-col items-center gap-1 rounded-2xl border px-2 py-4 transition-all",
                     selected && "border-gold-500 bg-gold-500 text-charcoal-900",
                   )}
                 >
@@ -287,7 +288,7 @@ export function BookingWizard({
                   setStep(4);
                 }}
                 className={cn(
-                  "border-border hover:border-gold-400 rounded-xl border py-3 text-sm font-medium transition-all",
+                  "border-border hover:border-gold-400 cursor-pointer rounded-xl border py-3 text-sm font-medium transition-all",
                   state.slot === slot && "border-gold-500 bg-gold-500 text-charcoal-900",
                 )}
               >
@@ -322,7 +323,7 @@ export function BookingWizard({
                 <Label htmlFor="name">Full name</Label>
                 <Input id="name" {...detailsForm.register("name")} />
                 {detailsForm.formState.errors.name && (
-                  <p className="text-destructive text-xs">
+                  <p role="alert" className="text-destructive text-xs">
                     {detailsForm.formState.errors.name.message}
                   </p>
                 )}
@@ -331,7 +332,7 @@ export function BookingWizard({
                 <Label htmlFor="phone">Phone</Label>
                 <Input id="phone" type="tel" {...detailsForm.register("phone")} />
                 {detailsForm.formState.errors.phone && (
-                  <p className="text-destructive text-xs">
+                  <p role="alert" className="text-destructive text-xs">
                     {detailsForm.formState.errors.phone.message}
                   </p>
                 )}
@@ -342,7 +343,7 @@ export function BookingWizard({
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" {...detailsForm.register("email")} />
               {detailsForm.formState.errors.email && (
-                <p className="text-destructive text-xs">
+                <p role="alert" className="text-destructive text-xs">
                   {detailsForm.formState.errors.email.message}
                 </p>
               )}

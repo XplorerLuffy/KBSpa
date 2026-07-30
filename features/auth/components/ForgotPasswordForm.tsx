@@ -21,7 +21,10 @@ export function ForgotPasswordForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ForgotPasswordValues>({ resolver: zodResolver(forgotPasswordSchema) });
+  } = useForm<ForgotPasswordValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: "onBlur",
+  });
 
   if (sent) {
     return (
@@ -59,7 +62,9 @@ export function ForgotPasswordForm() {
           aria-invalid={Boolean(errors.email)}
         />
         {errors.email && (
-          <p className="text-destructive text-xs">{errors.email.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.email.message}
+          </p>
         )}
       </div>
 

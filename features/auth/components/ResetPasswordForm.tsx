@@ -21,7 +21,10 @@ export function ResetPasswordForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema) });
+  } = useForm<ResetPasswordValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    mode: "onBlur",
+  });
 
   return (
     <form
@@ -48,7 +51,9 @@ export function ResetPasswordForm() {
           aria-invalid={Boolean(errors.password)}
         />
         {errors.password && (
-          <p className="text-destructive text-xs">{errors.password.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
@@ -62,7 +67,9 @@ export function ResetPasswordForm() {
           aria-invalid={Boolean(errors.confirmPassword)}
         />
         {errors.confirmPassword && (
-          <p className="text-destructive text-xs">{errors.confirmPassword.message}</p>
+          <p role="alert" className="text-destructive text-xs">
+            {errors.confirmPassword.message}
+          </p>
         )}
       </div>
 

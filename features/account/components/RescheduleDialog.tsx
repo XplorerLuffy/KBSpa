@@ -104,7 +104,7 @@ export function RescheduleDialog({
                   type="button"
                   onClick={() => setDate(value)}
                   className={cn(
-                    "border-border flex shrink-0 flex-col items-center rounded-xl border px-3.5 py-2.5 text-xs",
+                    "border-border hover:border-gold-400 flex shrink-0 cursor-pointer flex-col items-center rounded-xl border px-3.5 py-2.5 text-xs transition-colors",
                     date === value && "border-gold-500 bg-gold-500 text-charcoal-900",
                   )}
                 >
@@ -135,7 +135,7 @@ export function RescheduleDialog({
                   type="button"
                   onClick={() => setSelected(slot)}
                   className={cn(
-                    "border-border rounded-lg border py-2.5 text-sm",
+                    "border-border hover:border-gold-400 cursor-pointer rounded-lg border py-2.5 text-sm transition-colors",
                     selected === slot && "border-gold-500 bg-gold-500 text-charcoal-900",
                   )}
                 >

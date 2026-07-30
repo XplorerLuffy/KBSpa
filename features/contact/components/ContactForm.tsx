@@ -17,7 +17,7 @@ export function ContactForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ContactValues>({ resolver: zodResolver(contactSchema) });
+  } = useForm<ContactValues>({ resolver: zodResolver(contactSchema), mode: "onBlur" });
 
   const onSubmit = async (values: ContactValues) => {
     const result = await submitContactMessage(values);
@@ -43,7 +43,7 @@ export function ContactForm() {
             aria-describedby={errors.name ? "name-error" : undefined}
           />
           {errors.name && (
-            <p id="name-error" className="text-destructive text-xs">
+            <p id="name-error" role="alert" className="text-destructive text-xs">
               {errors.name.message}
             </p>
           )}
@@ -59,7 +59,7 @@ export function ContactForm() {
             aria-describedby={errors.email ? "email-error" : undefined}
           />
           {errors.email && (
-            <p id="email-error" className="text-destructive text-xs">
+            <p id="email-error" role="alert" className="text-destructive text-xs">
               {errors.email.message}
             </p>
           )}
@@ -87,7 +87,7 @@ export function ContactForm() {
           aria-describedby={errors.message ? "message-error" : undefined}
         />
         {errors.message && (
-          <p id="message-error" className="text-destructive text-xs">
+          <p id="message-error" role="alert" className="text-destructive text-xs">
             {errors.message.message}
           </p>
         )}

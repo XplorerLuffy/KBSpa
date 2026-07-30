@@ -28,7 +28,14 @@ function playNotificationSound() {
         "-NoProfile",
         "-NonInteractive",
         "-Command",
-        "[System.Media.SystemSounds]::Asterisk.Play()",
+        // SystemSound.Play() is asynchronous — it hands the sound off to the
+        // audio subsystem and returns immediately. With nothing else in the
+        // script, PowerShell was exiting (and tearing down the audio handle
+        // with it) before the sound actually finished playing, so nothing
+        // was ever heard even though this was running correctly. The sleep
+        // just keeps the process alive long enough for the (well under a
+        // second) system sound to actually finish.
+        "[System.Media.SystemSounds]::Asterisk.Play(); Start-Sleep -Milliseconds 800",
       ],
       { windowsHide: true, stdio: "ignore" },
     );

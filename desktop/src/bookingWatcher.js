@@ -4,6 +4,7 @@ const { Notification } = require("electron");
 const { createClient } = require("@supabase/supabase-js");
 const config = require("./config");
 const { readAccessToken } = require("./session");
+const { playNotificationSound } = require("./sound");
 
 /**
  * Watches the appointments table and raises native alerts for new bookings.
@@ -48,6 +49,11 @@ async function refreshPendingCount() {
 }
 
 function notifyNewBooking(row) {
+  // Independent of the toast below: Windows can silence a notification's own
+  // sound (Focus Assist, per-app settings) while still showing it silently,
+  // so a booking worth hearing about needs a cue outside that pipeline.
+  playNotificationSound();
+
   if (!Notification.isSupported()) return;
 
   const when = row?.start_time

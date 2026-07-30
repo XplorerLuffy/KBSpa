@@ -7,8 +7,10 @@ screen: fix a bug once and both web and desktop get it.
 What the desktop build adds over a browser tab:
 
 - **New-booking alerts.** A native Windows notification the moment a booking
-  comes in, even when the window is closed. Clicking it jumps straight to
-  Bookings.
+  comes in, even when the window is closed, plus an audible chime that
+  doesn't depend on the notification's own sound (which Focus Assist or
+  per-app settings can silence while still showing the popup). Clicking the
+  notification jumps straight to Bookings.
 - **Tray icon** showing how many bookings are awaiting approval, with shortcuts
   to each admin section.
 - **Runs in the background.** Closing the window hides it to the tray so alerts
@@ -173,6 +175,7 @@ src/main.js            App lifecycle, window, menu, security policy
 src/config.js          URLs, keys, tray/menu sections
 src/session.js         Recovers the Supabase token from window cookies
 src/bookingWatcher.js  Realtime subscription + native notifications
+src/sound.js           Audible chime for new bookings, independent of the toast
 src/tray.js            Tray icon, pending-booking badge
 src/updater.js         Checks GitHub Releases, downloads and installs updates
 src/windowState.js     Remembers window size/position

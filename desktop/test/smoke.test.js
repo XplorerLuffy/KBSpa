@@ -257,6 +257,18 @@ check("icon file exists at referenced path", () => {
   require("node:fs").accessSync(tray.iconPath());
 });
 
+console.log("\nsound.js");
+const sound = require(path.join(DESKTOP, "src/sound.js"));
+check("exports playNotificationSound", () => {
+  assert.strictEqual(typeof sound.playNotificationSound, "function");
+});
+check("no-ops without throwing off Windows (this test runs on " + process.platform + ")", () => {
+  // Real PowerShell spawning only happens on win32; everywhere else this
+  // must be an immediate, silent no-op rather than attempting to spawn
+  // anything.
+  sound.playNotificationSound();
+});
+
 console.log("\nbookingWatcher.js");
 const watcher = require(path.join(DESKTOP, "src/bookingWatcher.js"));
 check("exports start/stop", () => {

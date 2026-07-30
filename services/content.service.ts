@@ -94,6 +94,40 @@ export async function getTestimonials(options?: {
   return (data ?? []) as unknown as TestimonialWithService[];
 }
 
+export async function getHomeStats(): Promise<{
+  serviceCount: number;
+  staffCount: number;
+  averageRating: number | null;
+  reviewCount: number;
+}> {
+  const supabase = await createClient();
+  const [{ count: serviceCount }, { count: staffCount }, { data: ratings }] =
+    await Promise.all([
+      supabase
+        .from("services")
+        .select("id", { count: "exact", head: true })
+        .eq("is_active", true),
+      supabase
+        .from("staff")
+        .select("id", { count: "exact", head: true })
+        .eq("is_active", true),
+      supabase.from("testimonials").select("rating").eq("is_approved", true),
+    ]);
+
+  const reviewCount = ratings?.length ?? 0;
+  const averageRating =
+    reviewCount > 0
+      ? ratings!.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+      : null;
+
+  return {
+    serviceCount: serviceCount ?? 0,
+    staffCount: staffCount ?? 0,
+    averageRating,
+    reviewCount,
+  };
+}
+
 export async function getActivePromotions(): Promise<Promotion[]> {
   const supabase = await createClient();
   const now = new Date().toISOString();

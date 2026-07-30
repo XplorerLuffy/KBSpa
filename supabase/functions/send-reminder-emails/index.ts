@@ -1,6 +1,6 @@
 // Scheduled hourly via pg_cron. Emails guests whose appointment is ~24h away.
-import { bookingReminderEmail } from "../_shared/emails.ts";
-import { restPatch, restQuery, sendEmail } from "../_shared/resend.ts";
+import { bookingReminderEmail } from "./emails.ts";
+import { restPatch, restQuery, sendEmail } from "./mailer.ts";
 
 type Row = {
   id: string;
@@ -12,7 +12,15 @@ type Row = {
   staff: { full_name: string } | null;
 };
 
-Deno.serve(async () => {
+// Only ever called by the hourly pg_cron job, so it authenticates via a
+// shared secret (Supabase Vault + this function's own secrets) rather than a
+// user JWT — verify_jwt is off in its deploy config for exactly that reason.
+Deno.serve(async (request) => {
+  const expectedSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+  if (!expectedSecret || request.headers.get("x-webhook-secret") !== expectedSecret) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   try {
     const from = new Date(Date.now() + 23 * 3600_000).toISOString();
     const to = new Date(Date.now() + 25 * 3600_000).toISOString();

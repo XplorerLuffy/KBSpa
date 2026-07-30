@@ -31,8 +31,9 @@ Optional:
 | Variable | Where | Notes |
 | --- | --- | --- |
 | `SUPABASE_SERVICE_ROLE_KEY` | Vercel + local | **Not needed today.** Only `lib/notifications/sms.ts` reads it, and that stub has no call sites yet. The Edge Functions get their own copy injected by Supabase. **Server only** — bypasses RLS, never prefix with `NEXT_PUBLIC_` |
-| `RESEND_API_KEY` | Supabase Edge Function secret | Transactional email |
-| `RESEND_FROM_EMAIL` | Supabase Edge Function secret | e.g. `bookings@yourdomain.com` |
+| `GMAIL_USER` | Supabase Edge Function secret | The Gmail address emails send from, e.g. `tshewangdema535@gmail.com` |
+| `GMAIL_APP_PASSWORD` | Supabase Edge Function secret | A 16-char Google **App Password** for that account (Google Account → Security → 2-Step Verification → App passwords) — not its real password |
+| `INTERNAL_FUNCTION_SECRET` | Supabase Edge Function secret | Shared secret the appointments trigger/cron use to call these functions — must match the `internal_function_secret` entry in Supabase Vault (see migration `20260730104606_wire_booking_email_notifications.sql`) |
 | `ADMIN_NOTIFICATION_EMAIL` | Supabase Edge Function secret | Where new/cancelled booking alerts go |
 
 ---
@@ -114,26 +115,46 @@ supabase gen types typescript --project-id <project-ref> > types/supabase.ts
 
 ## Email notifications
 
-Two Deno Edge Functions in `supabase/functions/`:
+Two Deno Edge Functions in `supabase/functions/`, sent through **Gmail's own SMTP**
+(authenticated as `GMAIL_USER` via an App Password) rather than a third-party API —
+that's the only way mail can legitimately claim to be from a gmail.com address at all;
+a third-party API sending "from" a gmail.com address fails Gmail's own sender
+authentication and gets rejected or spam-filtered, regardless of the from header.
 
 | Function | Trigger | Sends |
 | --- | --- | --- |
-| `send-booking-email` | Database Webhook on `appointments` INSERT + UPDATE | Confirmation, approval, cancellation, reschedule (+ admin alerts) |
-| `send-reminder-emails` | `pg_cron`, hourly | 24-hour reminders (idempotent via `reminder_sent_at`) |
+| `send-booking-email` | Postgres trigger on `appointments` INSERT + UPDATE (`appointments_notify_email`) | Confirmation, approval, cancellation, reschedule (+ admin alerts) |
+| `send-reminder-emails` | `pg_cron`, hourly (`send-reminder-emails-hourly`) | 24-hour reminders (idempotent via `reminder_sent_at`) |
+
+Both the trigger and the cron job call their function via `pg_net.http_post`, wired up
+entirely as code in migration `20260730104606_wire_booking_email_notifications.sql` — no
+Dashboard configuration needed for the trigger/schedule itself. They authenticate with a
+shared secret (`x-webhook-secret` header) read from **Supabase Vault** at call time, never
+hardcoded in the migration, checked by each function against `INTERNAL_FUNCTION_SECRET`.
+Both functions run with `verify_jwt: false`, since neither is ever called by an end user —
+only by the trigger/cron — so a user JWT doesn't apply; the shared secret is the auth.
+
+Each function has its own local copies of `mailer.ts` and `emails.ts` (not a shared
+`_shared/` folder) — small duplication, but keeps `supabase functions deploy` and the
+Supabase MCP tool's own bundler (which does not resolve underscore-prefixed shared
+directories across functions) both able to deploy it without drift between them.
 
 Deploy and configure:
 
 ```bash
-supabase functions deploy send-booking-email
-supabase functions deploy send-reminder-emails
-supabase secrets set RESEND_API_KEY=… RESEND_FROM_EMAIL=… ADMIN_NOTIFICATION_EMAIL=…
+supabase functions deploy send-booking-email --no-verify-jwt
+supabase functions deploy send-reminder-emails --no-verify-jwt
+supabase secrets set GMAIL_USER=… GMAIL_APP_PASSWORD=… INTERNAL_FUNCTION_SECRET=… ADMIN_NOTIFICATION_EMAIL=…
 ```
 
-Then in the Supabase Dashboard:
+`GMAIL_APP_PASSWORD` requires 2-Step Verification enabled on that Gmail account, then a
+generated App Password (Google Account → Security → App passwords) — not the account's
+real password. `INTERNAL_FUNCTION_SECRET` must match the value already stored in Vault
+as `internal_function_secret` (set once via the SQL editor: `select vault.create_secret('<value>', 'internal_function_secret', '…')`
+— see the migration for the exact secret name the trigger/cron look up).
 
-1. **Database → Webhooks** → new webhook on `appointments`, events `INSERT` + `UPDATE`,
-   type "Supabase Edge Functions", target `send-booking-email`.
-2. **Database → Cron Jobs** → hourly (`0 * * * *`) invoking `send-reminder-emails`.
+To point `send-booking-email`/`send-reminder-emails` at a different Gmail account later,
+just update the `GMAIL_USER`/`GMAIL_APP_PASSWORD` secrets — nothing else changes.
 
 SMS and WhatsApp are stubbed: `lib/notifications/sms.ts` implements the same
 `NotificationChannel` interface and records every send to `notification_logs`. Swap the

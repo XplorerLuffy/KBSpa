@@ -6,8 +6,8 @@ import {
   bookingConfirmationEmail,
   bookingRescheduledEmail,
   type BookingEmailData,
-} from "../_shared/emails.ts";
-import { restQuery, sendEmail } from "../_shared/resend.ts";
+} from "./emails.ts";
+import { restQuery, sendEmail } from "./mailer.ts";
 
 type AppointmentRecord = {
   id: string;
@@ -56,7 +56,17 @@ async function buildEmailData(record: AppointmentRecord): Promise<BookingEmailDa
   };
 }
 
+// This function is only ever called by the appointments-table trigger, never
+// directly by an end-user's browser, so it authenticates via a shared secret
+// (stored in Supabase Vault + this function's own secrets, never in a
+// migration file) rather than a user JWT. verify_jwt is off in its deploy
+// config for exactly that reason.
 Deno.serve(async (request) => {
+  const expectedSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+  if (!expectedSecret || request.headers.get("x-webhook-secret") !== expectedSecret) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   try {
     const payload: WebhookPayload = await request.json();
     const { type, record, old_record: previous } = payload;

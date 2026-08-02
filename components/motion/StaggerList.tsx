@@ -28,16 +28,16 @@ export function StaggerList({ className, children, ...props }: HTMLAttributes<HT
       return;
     }
 
-    gsap.set(items, { opacity: 0, y: 22, scale: 0.96 });
+    gsap.set(items, { opacity: 0, y: 40, scale: 0.94 });
 
     const tween = gsap.to(items, {
       opacity: 1,
       y: 0,
       scale: 1,
-      duration: 0.45,
+      duration: 0.6,
       ease: "power3.out",
-      stagger: 0.08,
-      scrollTrigger: { trigger: element, start: "top 85%", once: true },
+      stagger: 0.1,
+      scrollTrigger: { trigger: element, start: "top 90%", once: true },
     });
 
     return () => {

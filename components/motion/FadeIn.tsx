@@ -26,7 +26,7 @@ const offsets = {
 export function FadeIn({
   delay = 0,
   direction = "up",
-  distance = 24,
+  distance = 56,
   className,
   children,
   ...props
@@ -49,10 +49,10 @@ export function FadeIn({
       opacity: 1,
       x: 0,
       y: 0,
-      duration: 0.6,
+      duration: 0.9,
       delay,
       ease: "power3.out",
-      scrollTrigger: { trigger: element, start: "top 88%", once: true },
+      scrollTrigger: { trigger: element, start: "top 92%", once: true },
     });
 
     return () => {

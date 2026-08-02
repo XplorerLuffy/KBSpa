@@ -12,6 +12,66 @@ import { cn } from "@/lib/utils";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
+ * Types the headline out character by character with a blinking caret.
+ * Screen readers get the full text immediately via a visually-hidden span —
+ * only the visible, decorative copy is progressively revealed.
+ */
+function TypewriterHeadline({
+  text,
+  startDelay = 400,
+  speed = 45,
+}: {
+  text: string;
+  startDelay?: number;
+  speed?: number;
+}) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(0);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCount(text.length);
+      return;
+    }
+
+    let interval: ReturnType<typeof setInterval>;
+    const startTimeout = setTimeout(() => {
+      interval = setInterval(() => {
+        setCount((current) => {
+          if (current >= text.length) {
+            clearInterval(interval);
+            return current;
+          }
+          return current + 1;
+        });
+      }, speed);
+    }, startDelay);
+
+    return () => {
+      clearTimeout(startTimeout);
+      clearInterval(interval);
+    };
+  }, [text, startDelay, speed]);
+
+  const done = count >= text.length;
+
+  return (
+    <>
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">
+        {text.slice(0, count)}
+        <span
+          className={cn(
+            "ml-0.5 inline-block h-[0.85em] w-[3px] translate-y-[0.1em] bg-current align-middle",
+            done && "motion-safe:animate-pulse",
+          )}
+        />
+      </span>
+    </>
+  );
+}
+
+/**
  * The hero always renders the dark cinematic treatment (gradient overlay,
  * white text) regardless of whether the salon has uploaded its own photo or
  * video yet — a rich generated backdrop stands in until real photography is
@@ -128,7 +188,7 @@ export function Hero({
             transition={{ duration: 0.85, delay: 0.08, ease: EASE }}
             className="font-serif text-[2.5rem] leading-[1.1] font-medium text-balance text-white sm:text-6xl lg:text-[4rem]"
           >
-            {headline}
+            <TypewriterHeadline text={headline} />
           </motion.h1>
 
           <motion.p

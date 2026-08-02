@@ -46,21 +46,19 @@ export function Navbar({
   }, []);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        solid
-          ? "glass border-b border-border/50"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-5">
       <nav
         aria-label="Main"
-        className="container-page flex h-[4.5rem] items-center justify-between gap-4 py-3 sm:h-20"
+        className={cn(
+          "mx-auto grid h-[4.25rem] max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 rounded-[18px] px-4 transition-all duration-300 sm:h-20 sm:px-6",
+          solid
+            ? "glass border border-white/50 shadow-soft dark:border-white/10"
+            : "border border-transparent bg-transparent",
+        )}
       >
         <Logo inverted={!solid} src={logoUrl} />
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center justify-self-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {
             const active =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -87,7 +85,7 @@ export function Navbar({
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-self-end gap-2">
           <Button
             asChild
             variant="ghost"

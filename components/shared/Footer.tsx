@@ -1,29 +1,23 @@
 import Link from "next/link";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { FacebookIcon, InstagramIcon } from "@/components/shared/BrandIcons";
 import { Logo } from "@/components/shared/Logo";
 import { Separator } from "@/components/ui/separator";
-import { NAV_LINKS, WEEKDAYS } from "@/lib/constants";
-import type { BusinessHour, SiteSettings } from "@/types/domain";
-
-function formatTime(value: string) {
-  const [h, m] = value.split(":").map(Number);
-  const period = h >= 12 ? "PM" : "AM";
-  const hour = h % 12 === 0 ? 12 : h % 12;
-  return `${hour}:${String(m).padStart(2, "0")} ${period}`;
-}
+import { NewsletterForm } from "@/features/marketing/components/NewsletterForm";
+import { NAV_LINKS } from "@/lib/constants";
+import type { Category, SiteSettings } from "@/types/domain";
 
 export function Footer({
   settings,
-  hours,
+  categories,
 }: {
   settings: SiteSettings;
-  hours: BusinessHour[];
+  categories: Category[];
 }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-charcoal-900 text-cream-200 mt-24">
+    <footer className="bg-olive-900 text-cream-200 mt-24">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4">
@@ -87,51 +81,52 @@ export function Footer({
             </ul>
           </nav>
 
-          <div>
-            <h2 className="text-gold-300 mb-4 font-serif text-base">Opening Hours</h2>
-            <ul className="flex flex-col gap-2 text-sm">
-              {hours.map((hour) => (
-                <li key={hour.weekday} className="flex justify-between gap-4">
-                  <span className="text-cream-200/75">{WEEKDAYS[hour.weekday]}</span>
-                  <span className="text-cream-200/60">
-                    {hour.is_closed
-                      ? "Closed"
-                      : `${formatTime(hour.open_time)} – ${formatTime(hour.close_time)}`}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-gold-300 mb-4 font-serif text-base">Get in Touch</h2>
-            <ul className="flex flex-col gap-3 text-sm">
-              {settings.address && (
-                <li className="flex gap-3">
-                  <MapPin className="text-gold-400 mt-0.5 size-4 shrink-0" />
-                  <span className="text-cream-200/75">{settings.address}</span>
+          <nav aria-label="Footer services">
+            <h2 className="text-gold-300 mb-4 font-serif text-base">Our Services</h2>
+            <ul className="flex flex-col gap-2.5 text-sm">
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={`/services?category=${category.slug}`}
+                      className="text-cream-200/75 hover:text-gold-300 transition-colors"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>
+                  <Link
+                    href="/services"
+                    className="text-cream-200/75 hover:text-gold-300 transition-colors"
+                  >
+                    All treatments
+                  </Link>
                 </li>
               )}
+            </ul>
+          </nav>
+
+          <div className="flex flex-col gap-4 md:col-span-2 lg:col-span-1">
+            <h2 className="text-gold-300 font-serif text-base">Newsletter</h2>
+            <p className="text-cream-200/70 text-sm leading-relaxed">
+              Subscribe to get updates and special offers.
+            </p>
+            <NewsletterForm contactEmail={settings.email} />
+            <ul className="text-cream-200/75 mt-2 flex flex-col gap-2.5 text-sm">
               {settings.phone && (
-                <li className="flex gap-3">
-                  <Phone className="text-gold-400 mt-0.5 size-4 shrink-0" />
-                  <a
-                    href={`tel:${settings.phone.replace(/\s/g, "")}`}
-                    className="text-cream-200/75 hover:text-gold-300"
-                  >
+                <li className="flex items-center gap-3">
+                  <Phone className="text-gold-400 size-4 shrink-0" />
+                  <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="hover:text-gold-300">
                     {settings.phone}
                   </a>
                 </li>
               )}
-              {settings.email && (
-                <li className="flex gap-3">
-                  <Mail className="text-gold-400 mt-0.5 size-4 shrink-0" />
-                  <a
-                    href={`mailto:${settings.email}`}
-                    className="text-cream-200/75 hover:text-gold-300 break-all"
-                  >
-                    {settings.email}
-                  </a>
+              {settings.address && (
+                <li className="flex items-start gap-3">
+                  <MapPin className="text-gold-400 mt-0.5 size-4 shrink-0" />
+                  <span>{settings.address}</span>
                 </li>
               )}
             </ul>

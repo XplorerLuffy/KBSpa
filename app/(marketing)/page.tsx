@@ -1,19 +1,21 @@
 import { HomeView } from "@/features/marketing/components/HomeView";
 import { getCategories, getServices } from "@/services/catalog.service";
 import {
+  getBusinessHours,
   getHomeStats,
   getSettings,
   getTestimonials,
 } from "@/services/content.service";
 
 export default async function HomePage() {
-  const [settings, featured, categories, testimonials, stats] =
+  const [settings, featured, categories, testimonials, stats, hours] =
     await Promise.all([
       getSettings(),
-      getServices({ featuredOnly: true, limit: 6 }),
+      getServices({ featuredOnly: true, limit: 4 }),
       getCategories(),
       getTestimonials({ featuredOnly: true, limit: 6 }),
       getHomeStats(),
+      getBusinessHours(),
     ]);
 
   return (
@@ -23,6 +25,7 @@ export default async function HomePage() {
       categories={categories}
       testimonials={testimonials}
       stats={stats}
+      hours={hours}
     />
   );
 }

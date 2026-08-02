@@ -11,19 +11,20 @@
  */
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, sans-serif;
 
-  /* Warm off-white -> sand: page backgrounds and quiet surfaces. */
+  /* Primary: warm cream/sand scale. */
   --color-cream-50: #fdfcfa;
-  --color-cream-100: #fbfaf7;
-  --color-cream-200: #f7f4ee;
-  --color-cream-300: #f3f0e9;
+  --color-cream-100: #f7f4ee;
+  --color-cream-200: #f2ede4;
+  --color-cream-300: #e7dfc8;
 
   /* Stone: borders, dividers, muted fills. */
-  --color-beige-100: #efebe2;
-  --color-beige-200: #e4dfd3;
-  --color-beige-300: #d3ccbc;
-  --color-beige-400: #b9b09c;
+  --color-beige-100: #efe9db;
+  --color-beige-200: #e7dfc8;
+  --color-beige-300: #d6cbab;
+  --color-beige-400: #b9ab84;
 
   /* Gold: accent only — buttons, links, small marks. Muted from the old
      #d4af37 so it reads as brass rather than yellow. */
@@ -38,30 +39,30 @@
   --color-gold-800: #6b5417;
   --color-gold-900: #574515;
 
-  /* Sage: the calming secondary. (Kept under the `olive` name so existing
-     class names continue to resolve.) */
-  --color-olive-50: #f5f7f3;
-  --color-olive-100: #e8ede4;
-  --color-olive-200: #d3dbcc;
-  --color-olive-300: #b4c1aa;
-  --color-olive-400: #97a78b;
-  --color-olive-500: #7c8b6f;
-  --color-olive-600: #64735a;
-  --color-olive-700: #4e5a47;
-  --color-olive-800: #3e4839;
-  --color-olive-900: #333b2f;
+  /* Olive/sage: the calming secondary, tuned to the brand accent triad
+     (#9b8f67 muted / #6c7253 mid / #55613d deep). */
+  --color-olive-50: #f5f6f1;
+  --color-olive-100: #e9ebe0;
+  --color-olive-200: #d5d9c3;
+  --color-olive-300: #b9c09e;
+  --color-olive-400: #9b8f67;
+  --color-olive-500: #6c7253;
+  --color-olive-600: #55613d;
+  --color-olive-700: #454e32;
+  --color-olive-800: #363e28;
+  --color-olive-900: #2a2a27;
 
   /* Text: soft charcoal, never pure black. */
   --color-charcoal-50: #f6f5f3;
-  --color-charcoal-400: #7c7871;
-  --color-charcoal-600: #4a4740;
-  --color-charcoal-800: #2e2c28;
-  --color-charcoal-900: #23211e;
+  --color-charcoal-400: #5c5c5c;
+  --color-charcoal-600: #3a3a38;
+  --color-charcoal-800: #2a2a27;
+  --color-charcoal-900: #1b1a18;
 
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
-  --radius-3xl: 1.75rem;
-  --radius-4xl: 2.25rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
 
   /* Neutral-toned shadows. The previous ones were brown-tinted, which muddied
      everything they touched. */
@@ -73,48 +74,48 @@
 }
 
 :root {
-  --background: #fbfaf7;
-  --foreground: #23211e;
+  --background: #f7f4ee;
+  --foreground: #1e1e1e;
   --card: #ffffff;
-  --card-foreground: #23211e;
+  --card-foreground: #1e1e1e;
   --popover: #ffffff;
-  --popover-foreground: #23211e;
-  --primary: #c9a227;
-  --primary-foreground: #241d05;
-  --secondary: #7c8b6f;
-  --secondary-foreground: #ffffff;
-  --muted: #f3f0e9;
-  --muted-foreground: #6e6a62;
-  --accent: #efebe2;
-  --accent-foreground: #2e2c28;
+  --popover-foreground: #1e1e1e;
+  --primary: #55613d;
+  --primary-foreground: #f7f4ee;
+  --secondary: #9b8f67;
+  --secondary-foreground: #1e1e1e;
+  --muted: #f2ede4;
+  --muted-foreground: #5c5c5c;
+  --accent: #e7dfc8;
+  --accent-foreground: #1e1e1e;
   --destructive: #a8392f;
   --destructive-foreground: #ffffff;
-  --border: #e4dfd3;
-  --input: #e4dfd3;
-  --ring: #7c8b6f;
-  --radius: 0.875rem;
+  --border: #e7dfc8;
+  --input: #e7dfc8;
+  --ring: #6c7253;
+  --radius: 1.25rem;
 }
 
 .dark {
-  --background: #1a1917;
-  --foreground: #f0ede6;
-  --card: #232220;
-  --card-foreground: #f0ede6;
-  --popover: #232220;
-  --popover-foreground: #f0ede6;
-  --primary: #d9bc4a;
-  --primary-foreground: #1f1904;
-  --secondary: #9bab8e;
-  --secondary-foreground: #191d15;
-  --muted: #2b2a27;
-  --muted-foreground: #a6a199;
-  --accent: #2f2d2a;
-  --accent-foreground: #f0ede6;
+  --background: #1b1a18;
+  --foreground: #f2ede4;
+  --card: #2a2a27;
+  --card-foreground: #f2ede4;
+  --popover: #2a2a27;
+  --popover-foreground: #f2ede4;
+  --primary: #9b8f67;
+  --primary-foreground: #1b1a18;
+  --secondary: #6c7253;
+  --secondary-foreground: #f2ede4;
+  --muted: #2a2a27;
+  --muted-foreground: #b9ab84;
+  --accent: #363e28;
+  --accent-foreground: #f2ede4;
   --destructive: #cf5a4e;
   --destructive-foreground: #ffffff;
-  --border: #35332f;
-  --input: #35332f;
-  --ring: #9bab8e;
+  --border: #3a3a38;
+  --input: #3a3a38;
+  --ring: #9b8f67;
 }
 
 @theme inline {

@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -33,6 +36,16 @@ import type {
   SiteSettings,
   TestimonialWithService,
 } from "@/types/domain";
+
+// Bundled fallback photography (public/marketing/*) used until the salon
+// uploads its own via Admin > Settings — checked on disk so the page falls
+// back to the decorative gradient treatment if the file hasn't landed yet.
+const BUNDLED_HERO_IMAGE = "/marketing/hero-spa.jpg";
+const BUNDLED_ABOUT_IMAGE = "/marketing/about-spa.jpg";
+
+function bundledAssetExists(publicPath: string) {
+  return existsSync(path.join(process.cwd(), "public", publicPath));
+}
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   facial: Droplets,
@@ -109,6 +122,10 @@ export function HomeView({
   const visibleCategories = categories.slice(0, HOME_CATEGORY_LIMIT);
   const hasMoreCategories = categories.length > HOME_CATEGORY_LIMIT;
   const yearsExperience = Math.max(1, new Date().getFullYear() - FOUNDED_YEAR);
+  const heroImage =
+    settings.hero_image_url ||
+    (bundledAssetExists(BUNDLED_HERO_IMAGE) ? BUNDLED_HERO_IMAGE : undefined);
+  const aboutImage = bundledAssetExists(BUNDLED_ABOUT_IMAGE) ? BUNDLED_ABOUT_IMAGE : undefined;
 
   return (
     <>
@@ -118,7 +135,7 @@ export function HomeView({
           settings.hero_subtitle ??
           "Kuenphen Beauty Spa is your sanctuary for relaxation, healing, and natural beauty."
         }
-        imageUrl={settings.hero_image_url}
+        imageUrl={heroImage}
         videoUrl={settings.hero_video_url}
         instagramUrl={settings.instagram_url}
         facebookUrl={settings.facebook_url}
@@ -150,9 +167,22 @@ export function HomeView({
 
           <FadeIn className="relative mx-auto w-full max-w-sm lg:max-w-none">
             <div className="from-olive-200 via-cream-200 to-beige-200 relative aspect-[3/4] w-full overflow-hidden rounded-t-[9999px] rounded-b-[2rem] bg-gradient-to-br shadow-soft-lg">
-              <div className="bg-olive-500/20 absolute -top-10 -left-10 size-52 rounded-full blur-3xl" />
-              <div className="bg-gold-300/25 absolute -right-8 bottom-10 size-40 rounded-full blur-3xl" />
-              <Flower2 className="text-olive-600/25 absolute inset-0 m-auto size-24" aria-hidden />
+              {aboutImage ? (
+                <Image
+                  src={aboutImage}
+                  alt="A treatment room at Kuenphen Beauty Spa"
+                  fill
+                  sizes="(max-width: 1024px) 90vw, 40vw"
+                  className="object-cover"
+                  priority={false}
+                />
+              ) : (
+                <>
+                  <div className="bg-olive-500/20 absolute -top-10 -left-10 size-52 rounded-full blur-3xl" />
+                  <div className="bg-gold-300/25 absolute -right-8 bottom-10 size-40 rounded-full blur-3xl" />
+                  <Flower2 className="text-olive-600/25 absolute inset-0 m-auto size-24" aria-hidden />
+                </>
+              )}
             </div>
             <div className="bg-olive-700 text-white shadow-soft-lg absolute -bottom-6 -right-2 flex flex-col items-center gap-1 rounded-2xl px-7 py-5 sm:right-4">
               <span className="font-serif text-3xl font-medium">{yearsExperience}+</span>

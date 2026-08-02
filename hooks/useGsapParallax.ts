@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
 
 /**
- * Hero-only parallax. GSAP is used here (rather than Framer Motion) because it
- * drives a raw scroll-linked transform without a React re-render per frame.
+ * Scroll-linked parallax, driven by ScrollTrigger's `scrub` rather than a raw
+ * scroll listener — the tween's progress tracks the trigger section's own
+ * position in the viewport instead of the page's absolute scroll offset, so
+ * it stays correct regardless of what's above this section on the page.
  */
 export function useGsapParallax(
   ref: RefObject<HTMLElement | null>,
@@ -16,14 +18,21 @@ export function useGsapParallax(
     if (!element) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const quickTo = gsap.quickTo(element, "y", { duration: 0.5, ease: "power2.out" });
-    const onScroll = () => quickTo(window.scrollY * strength);
+    const trigger = element.closest("section") ?? element;
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const tween = gsap.fromTo(
+      element,
+      { y: 0 },
+      {
+        y: () => window.innerHeight * strength,
+        ease: "none",
+        scrollTrigger: { trigger, start: "top top", end: "bottom top", scrub: true },
+      },
+    );
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      gsap.killTweensOf(element);
+      tween.scrollTrigger?.kill();
+      tween.kill();
     };
   }, [ref, strength]);
 }

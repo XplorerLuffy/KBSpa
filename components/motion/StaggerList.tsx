@@ -1,67 +1,62 @@
 "use client";
 
-import { useRef } from "react";
-import {
-  motion,
-  useInView,
-  useReducedMotion,
-  type HTMLMotionProps,
-} from "framer-motion";
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 22, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
+import { useEffect, useRef, type HTMLAttributes } from "react";
+import { gsap } from "@/lib/gsap";
 
 /**
- * Scroll-reveal grid whose children animate in on a stagger.
+ * Scroll-reveal grid whose children animate in on a stagger, via GSAP +
+ * ScrollTrigger rather than Framer Motion's `whileInView`.
  *
- * Deliberately driven by `useInView` + a declarative `animate`, *not* by
- * `whileInView`. `whileInView` is a one-shot gesture: with `once: true` it
- * fires, detaches its observer, and never speaks to the subtree again. That
- * breaks any list whose contents change without the component unmounting —
- * filtering the services or gallery grid swaps in fresh children that mount
- * into the parent's `initial="hidden"` (opacity 0) and are never told to show,
- * so the results render but stay invisible.
- *
- * `animate` is a prop, so React re-applies it on every render and newly mounted
- * children animate from `hidden` to the parent's current variant.
+ * The effect re-runs whenever `children` changes. `ScrollTrigger`'s `once`
+ * option is a one-shot gesture tied to *this* effect run: swapping in a
+ * filtered set of children (services/gallery grid) without the component
+ * unmounting needs a fresh tween over the new DOM nodes, or the new results
+ * would render but stay invisible — the same failure mode the previous
+ * `whileInView`-based version had.
  */
-export function StaggerList({ children, ...props }: HTMLMotionProps<"div">) {
+export function StaggerList({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const reduceMotion = useReducedMotion();
 
-  // Never gate visibility on an animation the user has asked us not to run.
-  const state = reduceMotion || inView ? "show" : "hidden";
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const items = Array.from(element.children);
+    if (items.length === 0) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(items, { opacity: 1, y: 0, scale: 1 });
+      return;
+    }
+
+    gsap.set(items, { opacity: 0, y: 22, scale: 0.96 });
+
+    const tween = gsap.to(items, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.45,
+      ease: "power3.out",
+      stagger: 0.08,
+      scrollTrigger: { trigger: element, start: "top 85%", once: true },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [children]);
 
   return (
-    <motion.div
-      ref={ref}
-      variants={container}
-      initial="hidden"
-      animate={state}
-      {...props}
-    >
+    <div ref={ref} className={className} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-export function StaggerItem({ children, ...props }: HTMLMotionProps<"div">) {
+export function StaggerItem({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <motion.div variants={item} {...props}>
+    <div className={className} {...props}>
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -67,10 +67,14 @@ export function DeleteButton({
   action,
   label = "Delete",
   confirmMessage = "Delete this item?",
+  successMessage = "Deleted",
+  variant = "ghost",
 }: {
   action: () => Promise<Result>;
   label?: string;
   confirmMessage?: string;
+  successMessage?: string;
+  variant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -78,7 +82,7 @@ export function DeleteButton({
   return (
     <Button
       type="button"
-      variant="ghost"
+      variant={variant}
       size="sm"
       disabled={pending}
       onClick={() => {
@@ -87,7 +91,7 @@ export function DeleteButton({
           const result = await runAction(() => action());
           if (!result) return; // already reported by runAction
           if (result.ok) {
-            toast.success("Deleted");
+            toast.success(successMessage);
             router.refresh();
           } else {
             toast.error(result.error);

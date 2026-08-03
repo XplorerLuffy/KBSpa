@@ -11,9 +11,14 @@ import {
   SelectField,
   TextareaField,
 } from "@/features/admin/components/Field";
-import { deleteTestimonial, saveTestimonial } from "@/features/admin/actions";
+import {
+  approveTestimonial,
+  deleteTestimonial,
+  saveTestimonial,
+} from "@/features/admin/actions";
 import { createClient } from "@/lib/supabase/server";
 import { MediaField } from "@/features/admin/components/MediaField";
+import { FeedbackQrCard } from "@/features/admin/components/FeedbackQrCard";
 
 export const metadata: Metadata = { title: "Testimonials", robots: { index: false } };
 
@@ -37,39 +42,43 @@ export default async function AdminTestimonialsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
-        <Card className="p-6">
-          <h2 className="mb-5 font-serif text-lg font-medium">Add a review</h2>
-          <AdminForm
-            action={saveTestimonial}
-            submitLabel="Add review"
-            successMessage="Review added"
-          >
-            <Field name="customer_name" label="Customer name" required />
-            <Field
-              name="rating"
-              label="Rating (1–5)"
-              type="number"
-              min={1}
-              max={5}
-              defaultValue={5}
-              required
-            />
-            <TextareaField name="quote" label="Review" rows={4} />
-            <SelectField
-              name="service_id"
-              label="Treatment"
-              options={(services ?? []).map((service) => ({
-                value: service.id,
-                label: service.name,
-              }))}
-            />
-            <MediaField name="avatar_url" label="Photo" folder="testimonials" />
-            <div className="flex flex-wrap gap-6">
-              <CheckboxField name="is_approved" label="Approved" defaultChecked />
-              <CheckboxField name="is_featured" label="Feature on homepage" />
-            </div>
-          </AdminForm>
-        </Card>
+        <div className="flex flex-col gap-6">
+          <FeedbackQrCard />
+
+          <Card className="p-6">
+            <h2 className="mb-5 font-serif text-lg font-medium">Add a review</h2>
+            <AdminForm
+              action={saveTestimonial}
+              submitLabel="Add review"
+              successMessage="Review added"
+            >
+              <Field name="customer_name" label="Customer name" required />
+              <Field
+                name="rating"
+                label="Rating (1–5)"
+                type="number"
+                min={1}
+                max={5}
+                defaultValue={5}
+                required
+              />
+              <TextareaField name="quote" label="Review" rows={4} />
+              <SelectField
+                name="service_id"
+                label="Treatment"
+                options={(services ?? []).map((service) => ({
+                  value: service.id,
+                  label: service.name,
+                }))}
+              />
+              <MediaField name="avatar_url" label="Photo" folder="testimonials" />
+              <div className="flex flex-wrap gap-6">
+                <CheckboxField name="is_approved" label="Approved" defaultChecked />
+                <CheckboxField name="is_featured" label="Feature on homepage" />
+              </div>
+            </AdminForm>
+          </Card>
+        </div>
 
         <div className="flex flex-col gap-4">
           {(testimonials ?? []).length === 0 ? (
@@ -98,13 +107,27 @@ export default async function AdminTestimonialsPage() {
                     <span className="text-muted-foreground text-xs">
                       {service?.name ?? "No treatment linked"}
                     </span>
-                    <DeleteButton
-                      action={async () => {
-                        "use server";
-                        return deleteTestimonial(testimonial.id);
-                      }}
-                      confirmMessage="Delete this review?"
-                    />
+                    <div className="flex items-center gap-2">
+                      {!testimonial.is_approved && (
+                        <DeleteButton
+                          action={async () => {
+                            "use server";
+                            return approveTestimonial(testimonial.id);
+                          }}
+                          label="Approve"
+                          confirmMessage="Approve this review so it shows on the public testimonials page?"
+                          successMessage="Review approved"
+                          variant="outline"
+                        />
+                      )}
+                      <DeleteButton
+                        action={async () => {
+                          "use server";
+                          return deleteTestimonial(testimonial.id);
+                        }}
+                        confirmMessage="Delete this review?"
+                      />
+                    </div>
                   </div>
                 </Card>
               );

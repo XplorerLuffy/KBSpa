@@ -340,6 +340,19 @@ export async function deleteTestimonial(id: string): Promise<Result> {
   return { ok: true };
 }
 
+export async function approveTestimonial(id: string): Promise<Result> {
+  const supabase = await requireAdmin();
+  const { error } = await supabase
+    .from("testimonials")
+    .update({ is_approved: true })
+    .eq("id", id);
+  if (error) return fail("Could not approve the review.");
+
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/testimonials");
+  return { ok: true };
+}
+
 export async function savePromotion(formData: FormData, id?: string): Promise<Result> {
   const supabase = await requireAdmin();
   const parsed = promotionSchema.safeParse({

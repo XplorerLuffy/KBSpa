@@ -29,7 +29,7 @@ export async function getServices(options?: {
     .from("services")
     .select(SERVICE_WITH_CATEGORY)
     .eq("is_active", true)
-    .order("sort_order");
+    .order("price", { ascending: false });
 
   if (options?.featuredOnly) query = query.eq("is_featured", true);
   if (options?.limit) query = query.limit(options.limit);

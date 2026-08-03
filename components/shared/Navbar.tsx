@@ -60,7 +60,7 @@ export function Navbar({
             wordmark baked into the badge is illegible, and letting a
             circular medallion logo overlap the header slightly reads as
             intentional rather than like an overflow bug. */}
-        <Logo size={104} src={logoUrl} />
+        <Logo inverted={!solid} size={104} src={logoUrl} />
 
         <ul className="hidden items-center justify-self-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {

@@ -56,7 +56,11 @@ export function Navbar({
             : "border border-transparent bg-transparent",
         )}
       >
-        <Logo inverted={!solid} src={logoUrl} />
+        {/* Deliberately taller than the bar itself — at nav height the arced
+            wordmark baked into the badge is illegible, and letting a
+            circular medallion logo overlap the header slightly reads as
+            intentional rather than like an overflow bug. */}
+        <Logo size={104} src={logoUrl} />
 
         <ul className="hidden items-center justify-self-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {
@@ -128,7 +132,7 @@ export function Navbar({
             </SheetTrigger>
             <SheetContent side="right">
               <SheetTitle className="sr-only">Menu</SheetTitle>
-              <Logo href="/" className="mb-4" src={logoUrl} />
+              <Logo href="/" size={100} className="mb-4" src={logoUrl} />
               <ul className="flex flex-col gap-1">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>

@@ -19,7 +19,7 @@ export function TrustStats({
   reviewCount: number;
 }) {
   const stats: Stat[] = [
-    { value: "Since 2020", label: "Serving Thimphu" },
+    { value: "Since 2020", label: "Serving Gelephu" },
     { value: `${serviceCount}+`, label: "Treatments" },
     { value: `${staffCount}`, label: "Expert therapists" },
   ];

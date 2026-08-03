@@ -21,7 +21,7 @@ export function Footer({
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4">
-            <Logo inverted src={settings.logo_url} />
+            <Logo size={112} src={settings.logo_url} />
             <p className="text-cream-200/70 max-w-xs text-sm leading-relaxed">
               {settings.tagline ?? "Relax. Refresh. Rejuvenate."} Premium beauty and
               wellness treatments, tailored just for you.

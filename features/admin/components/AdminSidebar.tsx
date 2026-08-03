@@ -124,7 +124,7 @@ export function AdminSidebar({
   return (
     <>
       <aside className="bg-card border-border/70 hidden w-64 shrink-0 flex-col gap-8 border-r px-4 py-6 lg:flex">
-        <Logo href="/admin" src={logoUrl} />
+        <Logo href="/admin" size={96} src={logoUrl} />
         <nav aria-label="Admin" className="flex-1 overflow-y-auto">
           <NavLinks />
         </nav>

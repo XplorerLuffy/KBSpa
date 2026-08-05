@@ -35,6 +35,17 @@ export async function signUp(values: SignupValues): Promise<ActionResult> {
   if (!parsed.success) return { ok: false, error: "Check your details and try again." };
 
   const supabase = await createClient();
+
+  const { data: isAdminEmail } = await supabase.rpc("email_is_admin", {
+    check_email: parsed.data.email,
+  });
+  if (isAdminEmail) {
+    return {
+      ok: false,
+      error: "This email is reserved for admin sign-in. Please use a different email.",
+    };
+  }
+
   const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,

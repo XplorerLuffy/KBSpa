@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { GalleryItem } from "@/types/domain";
 
 export function GalleryCarousel({ items }: { items: GalleryItem[] }) {
   const [index, setIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // The filtered set changes size when the category filter changes — clamp
   // rather than let a stale index point past the end of a shorter list.
@@ -45,16 +47,29 @@ export function GalleryCarousel({ items }: { items: GalleryItem[] }) {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            <Image
-              src={active.image_url}
-              alt={active.caption ?? ""}
-              fill
-              priority={index === 0}
-              sizes="(max-width: 1024px) 100vw, 896px"
-              className="object-cover"
-            />
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              aria-label="View full-size photo"
+              className="group absolute inset-0 size-full cursor-zoom-in"
+            >
+              <Image
+                src={active.image_url}
+                alt={active.caption ?? ""}
+                fill
+                priority={index === 0}
+                sizes="(max-width: 1024px) 100vw, 896px"
+                className="object-cover"
+              />
+              <span className="bg-charcoal-900/0 group-hover:bg-charcoal-900/20 absolute inset-0 flex items-center justify-center transition-colors">
+                <ZoomIn
+                  className="size-8 text-white opacity-0 drop-shadow transition-opacity group-hover:opacity-100"
+                  aria-hidden
+                />
+              </span>
+            </button>
             {active.caption && (
-              <div className="from-charcoal-900/80 absolute inset-x-0 bottom-0 bg-gradient-to-t to-transparent px-6 py-5 text-sm text-white sm:text-base">
+              <div className="from-charcoal-900/80 pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t to-transparent px-6 py-5 text-sm text-white sm:text-base">
                 {active.caption}
               </div>
             )}
@@ -117,6 +132,58 @@ export function GalleryCarousel({ items }: { items: GalleryItem[] }) {
           ))}
         </div>
       )}
+
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogContent className="flex w-[calc(100%-2rem)] max-w-5xl flex-col gap-3 border-0 bg-transparent p-0 text-white shadow-none [&_svg]:text-white">
+          <DialogTitle className="sr-only">
+            {active.caption || `Photo ${index + 1} of ${items.length}`}
+          </DialogTitle>
+          <div className="bg-charcoal-950 relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:aspect-video">
+            <Image
+              src={active.image_url}
+              alt={active.caption ?? ""}
+              fill
+              sizes="90vw"
+              className="object-contain"
+            />
+
+            {items.length > 1 && (
+              <>
+                <Button
+                  type="button"
+                  variant="glass"
+                  size="icon"
+                  aria-label="Previous photo"
+                  onClick={() => go(-1)}
+                  className="absolute top-1/2 left-3 -translate-y-1/2"
+                >
+                  <ChevronLeft />
+                </Button>
+                <Button
+                  type="button"
+                  variant="glass"
+                  size="icon"
+                  aria-label="Next photo"
+                  onClick={() => go(1)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2"
+                >
+                  <ChevronRight />
+                </Button>
+              </>
+            )}
+          </div>
+          {(active.caption || items.length > 1) && (
+            <div className="flex items-center justify-between px-1 text-sm text-white/80">
+              <span>{active.caption}</span>
+              {items.length > 1 && (
+                <span>
+                  {index + 1} / {items.length}
+                </span>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

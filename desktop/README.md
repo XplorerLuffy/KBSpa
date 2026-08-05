@@ -16,6 +16,10 @@ What the desktop build adds over a browser tab:
 - **Runs in the background.** Closing the window hides it to the tray so alerts
   keep arriving; quitting is explicit.
 - **Remembers its window** size, position and maximised state.
+- **Always starts at sign-in.** The saved session is cleared every time the
+  app is launched (not on every reload — just cold starts), so it always
+  opens on the login screen instead of staying signed in indefinitely. This
+  is a shared front-desk machine, not a personal browser.
 - **Offline screen** instead of a browser error page, with a retry button.
 - **Updates itself.** Checks GitHub Releases for a newer build every few
   hours and at launch, downloads it in the background, and prompts to

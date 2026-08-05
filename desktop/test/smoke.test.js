@@ -81,6 +81,14 @@ const electronMock = {
   screen: { getAllDisplays: () => [{ bounds: { x: 0, y: 0, width: 1920, height: 1080 } }] },
   contextBridge: { exposeInMainWorld: fn("contextBridge.expose") },
   ipcRenderer: { send: fn("ipcRenderer.send") },
+  session: {
+    defaultSession: {
+      clearStorageData: () => {
+        calls.push("session.clearStorageData");
+        return Promise.resolve();
+      },
+    },
+  },
 };
 
 const origResolve = Module._resolveFilename;

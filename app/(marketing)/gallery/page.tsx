@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { PageHero } from "@/components/shared/PageHero";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { CategoryFilterBar } from "@/features/services/components/CategoryFilterBar";
-import { FadeIn } from "@/components/motion/FadeIn";
+import { GalleryCarousel } from "@/features/gallery/components/GalleryCarousel";
 import { getGalleryCategories, getGalleryItems } from "@/services/content.service";
 
 export const metadata: Metadata = {
@@ -53,31 +52,7 @@ export default async function GalleryPage({
             description="Gallery images are managed from the admin panel — add some to see them appear here."
           />
         ) : (
-          <div className="mt-12 columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5">
-            {items.map((item, index) => (
-              <FadeIn
-                key={item.id}
-                delay={(index % 6) * 0.05}
-                className="break-inside-avoid"
-              >
-                <figure className="group bg-cream-200 relative overflow-hidden rounded-2xl">
-                  <Image
-                    src={item.image_url}
-                    alt={item.caption ?? ""}
-                    width={800}
-                    height={1000}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="h-auto w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  {item.caption && (
-                    <figcaption className="from-charcoal-900/80 absolute inset-x-0 bottom-0 bg-gradient-to-t to-transparent p-5 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      {item.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              </FadeIn>
-            ))}
-          </div>
+          <GalleryCarousel items={items} />
         )}
       </section>
     </>

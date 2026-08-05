@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("node:path");
-const { app, BrowserWindow, Menu, shell, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, Menu, shell, ipcMain, dialog, session } = require("electron");
 
 const config = require("./config");
 const windowState = require("./windowState");
@@ -200,7 +200,19 @@ function buildAppMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  // Require a fresh sign-in every time the app is launched, rather than
+  // staying signed in indefinitely via the persisted session cookie — this
+  // is a shared front-desk machine, not a single admin's personal browser.
+  // Only cookies are cleared, and only at cold start: minimising the window,
+  // closing to tray, or reloading during the same run leaves the session
+  // alone.
+  try {
+    await session.defaultSession.clearStorageData({ storages: ["cookies"] });
+  } catch {
+    // Non-fatal — worst case the previous session carries over this launch.
+  }
+
   buildAppMenu();
   createWindow();
 

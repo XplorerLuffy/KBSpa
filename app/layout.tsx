@@ -27,7 +27,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(absoluteUrl()),
   title: {
-    default: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
+    default: "Kuenphen Beauty Spa — Relax, Renew and Reconnect with Yourself",
     template: "%s | Kuenphen Beauty Spa",
   },
   description:
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Kuenphen Beauty Spa",
-    title: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
+    title: "Kuenphen Beauty Spa — Relax, Renew and Reconnect with Yourself",
     description: "Premium beauty and wellness treatments tailored just for you.",
     url: absoluteUrl(),
     images: [
@@ -52,13 +52,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
+        alt: "Kuenphen Beauty Spa — Relax, Renew and Reconnect with Yourself",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kuenphen Beauty Spa — Relax. Refresh. Rejuvenate.",
+    title: "Kuenphen Beauty Spa — Relax, Renew and Reconnect with Yourself",
     description: "Premium beauty and wellness treatments tailored just for you.",
     images: ["/og-image.png"],
   },

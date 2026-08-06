@@ -23,7 +23,7 @@ export function Footer({
           <div className="flex flex-col gap-4">
             <Logo inverted size={112} src={settings.logo_url} />
             <p className="text-cream-200/70 max-w-xs text-sm leading-relaxed">
-              {settings.tagline ?? "Relax. Refresh. Rejuvenate."} Premium beauty and
+              {settings.tagline ?? "Relax, Renew and Reconnect with Yourself"} Premium beauty and
               wellness treatments, tailored just for you.
             </p>
             <div className="flex gap-3">

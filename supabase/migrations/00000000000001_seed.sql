@@ -12,7 +12,7 @@ on conflict (weekday) do nothing;
 
 insert into public.settings (key, value) values
   ('business_name', '"Kuenphen Beauty Spa"'::jsonb),
-  ('tagline', '"Relax. Refresh. Rejuvenate."'::jsonb),
+  ('tagline', '"Relax, Renew and Reconnect with Yourself"'::jsonb),
   ('logo_url', '""'::jsonb),  -- blank = use the bundled artwork; set from Admin -> Settings
   ('phone', '"+975 17 00 00 00"'::jsonb),
   ('email', '"hello@kuenphenbeautyspa.com"'::jsonb),

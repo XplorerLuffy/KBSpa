@@ -179,7 +179,7 @@ export function Hero({
             transition={{ duration: 0.7, ease: EASE }}
             className="glass inline-flex w-fit items-center gap-2.5 rounded-full border border-white/25 px-5 py-2 text-[0.6875rem] font-semibold tracking-[0.24em] text-cream-100 uppercase"
           >
-            Relax. Refresh. Rejuvenate.
+            Relax, Renew and Reconnect with Yourself
           </motion.span>
 
           <motion.h1

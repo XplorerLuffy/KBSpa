@@ -38,7 +38,7 @@ function isAdminPath(pathname) {
 module.exports = {
   siteUrl,
   adminUrl: `${siteUrl}/admin`,
-  loginUrl: `${siteUrl}/login`,
+  loginUrl: `${siteUrl}/admin/login`,
   allowedOrigin: new URL(siteUrl).origin,
   isAdminPath,
   supabaseUrl,

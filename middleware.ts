@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED_PREFIXES = ["/account", "/booking/review", "/booking/confirmation"];
 const ADMIN_PREFIX = "/admin";
+const ADMIN_LOGIN_PATH = "/admin/login";
 
 /**
  * Kept self-contained on purpose: the Edge middleware bundle is built separately
@@ -24,15 +25,21 @@ const ADMIN_PREFIX = "/admin";
  * down the entire site.
  */
 function isGuarded(pathname: string) {
+  // The admin login page itself must stay reachable while signed out — it's
+  // what unauthenticated /admin visitors get redirected to below, and
+  // guarding it too would turn that into a redirect loop.
+  if (pathname === ADMIN_LOGIN_PATH || pathname.startsWith(`${ADMIN_LOGIN_PATH}/`)) {
+    return false;
+  }
   return (
     pathname.startsWith(ADMIN_PREFIX) ||
     PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
   );
 }
 
-function redirectToLogin(request: NextRequest) {
+function redirectToLogin(request: NextRequest, pathname: string) {
   const url = request.nextUrl.clone();
-  url.pathname = "/login";
+  url.pathname = pathname.startsWith(ADMIN_PREFIX) ? ADMIN_LOGIN_PATH : "/login";
   url.searchParams.set("redirect", request.nextUrl.pathname);
   return NextResponse.redirect(url);
 }
@@ -46,7 +53,7 @@ export async function middleware(request: NextRequest) {
     console.error(
       "Supabase env vars are missing; auth guards are inactive. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
     );
-    return isGuarded(pathname) ? redirectToLogin(request) : NextResponse.next();
+    return isGuarded(pathname) ? redirectToLogin(request, pathname) : NextResponse.next();
   }
 
   try {
@@ -76,7 +83,7 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && isGuarded(pathname)) return redirectToLogin(request);
+    if (!user && isGuarded(pathname)) return redirectToLogin(request, pathname);
 
     if (user && pathname.startsWith(ADMIN_PREFIX)) {
       const { data: profile } = await supabase
@@ -96,7 +103,7 @@ export async function middleware(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("Middleware failed:", error);
-    return isGuarded(pathname) ? redirectToLogin(request) : NextResponse.next();
+    return isGuarded(pathname) ? redirectToLogin(request, pathname) : NextResponse.next();
   }
 }
 

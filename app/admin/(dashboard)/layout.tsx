@@ -11,7 +11,7 @@ export default async function AdminLayout({
   // Middleware already guards this path; re-check here so the page cannot render
   // for a non-admin even if it is reached another way.
   const profile = await getCurrentProfile();
-  if (!profile) redirect("/login?redirect=/admin");
+  if (!profile) redirect("/admin/login?redirect=/admin");
   if (profile.role !== "admin") redirect("/");
 
   const settings = await getSettings();

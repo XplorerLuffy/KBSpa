@@ -132,7 +132,7 @@ check("parses Supabase project ref from URL", () => {
   assert.strictEqual(config.supabaseProjectRef, "xujnlmyphzaxqdlohvjx");
 });
 check("allowedOrigin has no trailing path", () => {
-  assert.strictEqual(config.allowedOrigin, "https://kb-spa-mkzq.vercel.app");
+  assert.strictEqual(config.allowedOrigin, "https://www.kuenphenbeautyspa.com");
 });
 check("exposes navigable sections", () => {
   assert.ok(config.sections.length > 0);

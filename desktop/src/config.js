@@ -9,7 +9,11 @@
  * an installer and read it, and it bypasses RLS entirely.
  */
 
-const DEFAULT_ADMIN_URL = "https://kb-spa-mkzq.vercel.app";
+// kb-spa-mkzq.vercel.app sits behind Vercel's SSO deployment protection
+// (enabled for every domain except the custom one), so the desktop app must
+// point at the real custom domain — the *.vercel.app one shows a Vercel
+// auth wall instead of the login page.
+const DEFAULT_ADMIN_URL = "https://www.kuenphenbeautyspa.com";
 
 // Point at a local dev server with:  set KBSPA_URL=http://localhost:3000
 const siteUrl = (process.env.KBSPA_URL || DEFAULT_ADMIN_URL).replace(/\/$/, "");

@@ -1,8 +1,8 @@
-version: 1.1.0
+version: 1.1.1
 files:
-  - url: KuenphenAdmin-Setup-1.1.0.exe
-    sha512: l1QeTrh7DiQjll5Br/B2R92o0aO1lzCtpecaROkEI8efnPzsTJZKumWh/AdKpzJi2K290O0qWq71zUmUWquTJQ==
-    size: 100899732
-path: KuenphenAdmin-Setup-1.1.0.exe
-sha512: l1QeTrh7DiQjll5Br/B2R92o0aO1lzCtpecaROkEI8efnPzsTJZKumWh/AdKpzJi2K290O0qWq71zUmUWquTJQ==
-releaseDate: '2026-08-05T18:22:13.232Z'
+  - url: KuenphenAdmin-Setup-1.1.1.exe
+    sha512: LCn8YRApsjWoA2tKroUV8pyOAtW8nuJcVKtz3DHc4Pa0t3c9FAWVc4Dq/TSyDL1X2xH9WZhS1a20xPcqPxwkFw==
+    size: 100899709
+path: KuenphenAdmin-Setup-1.1.1.exe
+sha512: LCn8YRApsjWoA2tKroUV8pyOAtW8nuJcVKtz3DHc4Pa0t3c9FAWVc4Dq/TSyDL1X2xH9WZhS1a20xPcqPxwkFw==
+releaseDate: '2026-08-06T06:31:55.703Z'

@@ -37,7 +37,18 @@ export function initials(name: string) {
     .join("");
 }
 
+/**
+ * NEXT_PUBLIC_SITE_URL should always be set explicitly (it's what picks the
+ * real custom domain over Vercel's own *.vercel.app one), but if it's ever
+ * missing this still has to produce a working URL in production rather than
+ * silently emitting links to localhost — that would break real password
+ * resets and signup confirmation emails, not just SEO tags. VERCEL_URL is
+ * set automatically by Vercel at runtime, so it's a safe non-localhost
+ * fallback; only bare local dev (neither var set) falls back to localhost.
+ */
 export function absoluteUrl(path = "") {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
   return `${base.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }

@@ -65,6 +65,7 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 
 const HOME_CATEGORY_LIMIT = 8;
 const FOUNDED_YEAR = 2020;
+const MIN_YEARS_EXPERIENCE = 10;
 
 const ABOUT_PILLARS = [
   { icon: Leaf, title: "Natural & Organic", body: "We use 100% natural and high-quality products." },
@@ -121,7 +122,10 @@ export function HomeView({
 }) {
   const visibleCategories = categories.slice(0, HOME_CATEGORY_LIMIT);
   const hasMoreCategories = categories.length > HOME_CATEGORY_LIMIT;
-  const yearsExperience = Math.max(1, new Date().getFullYear() - FOUNDED_YEAR);
+  const yearsExperience = Math.max(
+    MIN_YEARS_EXPERIENCE,
+    new Date().getFullYear() - FOUNDED_YEAR,
+  );
   const heroImage =
     settings.hero_image_url ||
     (bundledAssetExists(BUNDLED_HERO_IMAGE) ? BUNDLED_HERO_IMAGE : undefined);

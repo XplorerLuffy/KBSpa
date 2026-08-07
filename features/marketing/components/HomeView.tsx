@@ -176,7 +176,7 @@ export function HomeView({
               {aboutImage ? (
                 <Image
                   src={aboutImage}
-                  alt="A treatment room at Kuenphen Beauty Spa"
+                  alt="Handmade herbal potli compresses used in Kuenphen Beauty Spa treatments"
                   fill
                   sizes="(max-width: 1024px) 90vw, 40vw"
                   className="object-cover"

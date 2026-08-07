@@ -109,6 +109,13 @@ export default async function AdminSettingsPage() {
             label="Hero subtitle"
             defaultValue={settings.hero_subtitle}
           />
+          <MediaField
+            name="setting_about_image_url"
+            label="About section photo"
+            folder="about"
+            defaultValue={settings.about_image_url}
+            hint="Leave empty to use the bundled artwork."
+          />
           <TextareaField
             name="setting_about_story"
             label="Our story"

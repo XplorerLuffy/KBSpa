@@ -129,7 +129,9 @@ export function HomeView({
   const heroImage =
     settings.hero_image_url ||
     (bundledAssetExists(BUNDLED_HERO_IMAGE) ? BUNDLED_HERO_IMAGE : undefined);
-  const aboutImage = bundledAssetExists(BUNDLED_ABOUT_IMAGE) ? BUNDLED_ABOUT_IMAGE : undefined;
+  const aboutImage =
+    settings.about_image_url ||
+    (bundledAssetExists(BUNDLED_ABOUT_IMAGE) ? BUNDLED_ABOUT_IMAGE : undefined);
 
   return (
     <>

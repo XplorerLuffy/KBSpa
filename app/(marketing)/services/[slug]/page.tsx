@@ -209,15 +209,17 @@ export default async function ServiceDetailPage({
               <Separator />
 
               <dl className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground inline-flex items-center gap-2 text-sm">
-                    <Clock className="size-4" aria-hidden />
-                    Duration
-                  </dt>
-                  <dd className="font-medium">
-                    {formatDuration(service.duration_minutes)}
-                  </dd>
-                </div>
+                {service.duration_minutes != null && (
+                  <div className="flex items-center justify-between">
+                    <dt className="text-muted-foreground inline-flex items-center gap-2 text-sm">
+                      <Clock className="size-4" aria-hidden />
+                      Duration
+                    </dt>
+                    <dd className="font-medium">
+                      {formatDuration(service.duration_minutes)}
+                    </dd>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground text-sm">Price</dt>
                   <dd className="font-serif text-2xl font-medium">
@@ -228,7 +230,9 @@ export default async function ServiceDetailPage({
 
               <div className="flex flex-col gap-3">
                 <Button asChild size="lg" className="w-full">
-                  <Link href={`/booking?service=${service.slug}`}>Book Appointment</Link>
+                  <Link href={`/booking?service=${service.slug}`}>
+                    {service.duration_minutes != null ? "Book Appointment" : "Contact to Book"}
+                  </Link>
                 </Button>
                 <FavoriteButton
                   serviceId={service.id}
@@ -238,7 +242,9 @@ export default async function ServiceDetailPage({
               </div>
 
               <p className="text-muted-foreground text-center text-xs">
-                Free cancellation up to 24 hours before your appointment.
+                {service.duration_minutes != null
+                  ? "Free cancellation up to 24 hours before your appointment."
+                  : "This treatment doesn't have online slots — we'll confirm a time with you directly."}
               </p>
             </Card>
           </aside>

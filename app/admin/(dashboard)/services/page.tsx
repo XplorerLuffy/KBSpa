@@ -63,7 +63,11 @@ export default async function AdminServicesPage() {
               <TableRow key={service.id}>
                 <TableCell className="font-medium">{service.name}</TableCell>
                 <TableCell>{service.category?.name ?? "—"}</TableCell>
-                <TableCell>{formatDuration(service.duration_minutes)}</TableCell>
+                <TableCell>
+                  {service.duration_minutes != null
+                    ? formatDuration(service.duration_minutes)
+                    : "—"}
+                </TableCell>
                 <TableCell>{formatCurrency(service.price)}</TableCell>
                 <TableCell>
                   <div className="flex gap-1.5">

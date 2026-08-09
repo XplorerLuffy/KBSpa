@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { BookingWizard } from "@/features/booking/components/BookingWizard";
 import { getServices, getStaffForService } from "@/services/catalog.service";
+import { getSettings } from "@/services/content.service";
 import { getCurrentProfile } from "@/lib/supabase/server";
 import type { Staff } from "@/types/domain";
 
@@ -15,10 +16,11 @@ export default async function BookingPage({
 }: {
   searchParams: Promise<{ service?: string }>;
 }) {
-  const [{ service }, services, profile] = await Promise.all([
+  const [{ service }, services, profile, settings] = await Promise.all([
     searchParams,
     getServices(),
     getCurrentProfile(),
+    getSettings(),
   ]);
 
   const staffLists = await Promise.all(
@@ -43,6 +45,7 @@ export default async function BookingPage({
         staffByService={staffByService}
         preselectedSlug={service}
         isAuthenticated={Boolean(profile)}
+        contact={{ phone: settings.phone, whatsapp: settings.whatsapp }}
         defaultProfile={
           profile
             ? {

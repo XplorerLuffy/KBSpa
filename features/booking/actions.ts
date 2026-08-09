@@ -29,7 +29,9 @@ function bookingErrorMessage(message: string) {
     return "That time was just booked. Please choose another slot.";
   }
   if (message.includes("SLOT_IN_PAST")) return "That time has already passed.";
-  if (message.includes("SERVICE_UNAVAILABLE")) return "That treatment is unavailable.";
+  if (message.includes("SERVICE_UNAVAILABLE")) {
+    return "This treatment doesn't have online booking slots — please contact us directly.";
+  }
   if (message.includes("STAFF_UNAVAILABLE")) return "That therapist is unavailable.";
   if (message.includes("AUTH_REQUIRED")) return "Please sign in to confirm your booking.";
   return "Could not confirm your booking. Please try again.";

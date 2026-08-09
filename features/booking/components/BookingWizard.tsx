@@ -12,6 +12,8 @@ import {
   Check,
   Clock,
   Loader2,
+  MessageCircle,
+  Phone,
   UserRound,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -45,6 +47,7 @@ type Props = {
   defaultProfile: { name: string; email: string; phone: string } | null;
   isAuthenticated: boolean;
   preselectedSlug?: string;
+  contact: { phone?: string; whatsapp?: string };
 };
 
 export function BookingWizard({
@@ -53,6 +56,7 @@ export function BookingWizard({
   defaultProfile,
   isAuthenticated,
   preselectedSlug,
+  contact,
 }: Props) {
   const router = useRouter();
   const { state, dispatch } = useBooking();
@@ -76,7 +80,7 @@ export function BookingWizard({
     const match = services.find((item) => item.slug === preselectedSlug);
     if (match) {
       dispatch({ type: "SET_SERVICE", serviceId: match.id, serviceSlug: match.slug });
-      setStep(1);
+      if (match.duration_minutes != null) setStep(1);
     }
   }, [preselectedSlug, services, state.serviceId, dispatch]);
 
@@ -147,39 +151,78 @@ export function BookingWizard({
     switch (step) {
       case 0:
         return (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {services.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  dispatch({
-                    type: "SET_SERVICE",
-                    serviceId: item.id,
-                    serviceSlug: item.slug,
-                  });
-                  setStep(1);
-                }}
-                className={cn(
-                  "border-border hover:border-gold-400 hover:shadow-soft flex cursor-pointer flex-col gap-2 rounded-2xl border p-5 text-left transition-all",
-                  state.serviceId === item.id && "border-gold-500 bg-gold-50",
-                )}
-              >
-                {item.category && (
-                  <span className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
-                    {item.category.name}
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {services.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    dispatch({
+                      type: "SET_SERVICE",
+                      serviceId: item.id,
+                      serviceSlug: item.slug,
+                    });
+                    if (item.duration_minutes != null) setStep(1);
+                  }}
+                  className={cn(
+                    "border-border hover:border-gold-400 hover:shadow-soft flex cursor-pointer flex-col gap-2 rounded-2xl border p-5 text-left transition-all",
+                    state.serviceId === item.id && "border-gold-500 bg-gold-50",
+                  )}
+                >
+                  {item.category && (
+                    <span className="text-olive-600 dark:text-olive-300 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
+                      {item.category.name}
+                    </span>
+                  )}
+                  <span className="font-serif text-lg font-medium">{item.name}</span>
+                  <span className="text-muted-foreground flex items-center gap-3 text-sm">
+                    {item.duration_minutes != null ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="size-3.5" aria-hidden />
+                        {formatDuration(item.duration_minutes)}
+                      </span>
+                    ) : (
+                      <span>Contact to book</span>
+                    )}
+                    <span className="font-medium">{formatCurrency(item.price)}</span>
                   </span>
-                )}
-                <span className="font-serif text-lg font-medium">{item.name}</span>
-                <span className="text-muted-foreground flex items-center gap-3 text-sm">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Clock className="size-3.5" aria-hidden />
-                    {formatDuration(item.duration_minutes)}
-                  </span>
-                  <span className="font-medium">{formatCurrency(item.price)}</span>
-                </span>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
+
+            {service && service.duration_minutes == null && (
+              <Card className="border-gold-300 bg-gold-50 flex flex-col gap-3 p-5">
+                <p className="text-sm font-medium">
+                  {service.name} doesn&apos;t have fixed appointment slots
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  Reach out and we&apos;ll arrange a time with you directly.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {contact.phone && (
+                    <Button asChild size="sm">
+                      <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>
+                        <Phone />
+                        Call us
+                      </a>
+                    </Button>
+                  )}
+                  {contact.whatsapp && (
+                    <Button asChild size="sm" variant="outline">
+                      <a
+                        href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MessageCircle />
+                        WhatsApp us
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            )}
           </div>
         );
 
@@ -393,7 +436,11 @@ export function BookingWizard({
                 <Row label="Treatment" value={service?.name ?? "—"} />
                 <Row
                   label="Duration"
-                  value={service ? formatDuration(service.duration_minutes) : "—"}
+                  value={
+                    service?.duration_minutes != null
+                      ? formatDuration(service.duration_minutes)
+                      : "—"
+                  }
                 />
                 <Row label="Therapist" value={therapist?.full_name ?? "—"} />
                 <Row

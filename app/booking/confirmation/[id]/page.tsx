@@ -47,7 +47,7 @@ export default async function ConfirmationPage({
           <Row
             label="Duration"
             value={
-              appointment.service
+              appointment.service?.duration_minutes != null
                 ? formatDuration(appointment.service.duration_minutes)
                 : "—"
             }

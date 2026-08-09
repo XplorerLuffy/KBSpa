@@ -16,7 +16,10 @@ export const serviceSchema = z.object({
   short_description: z.string().optional(),
   description: z.string().optional(),
   benefits: z.string().optional(),
-  duration_minutes: z.coerce.number().int().min(5, "Minimum 5 minutes"),
+  duration_minutes: z.preprocess(
+    (value) => (value === "" || value == null ? null : Number(value)),
+    z.number().int().min(5, "Minimum 5 minutes").nullable(),
+  ),
   price: z.coerce.number().min(0, "Price cannot be negative"),
   image_url: z.string().url("Enter a valid URL").optional().or(z.literal("")),
   is_active: z.boolean().default(true),

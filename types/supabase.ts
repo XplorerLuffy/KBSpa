@@ -428,7 +428,7 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
-          duration_minutes: number
+          duration_minutes: number | null
           gallery_urls: string[]
           id: string
           image_url: string | null
@@ -446,7 +446,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
-          duration_minutes: number
+          duration_minutes?: number | null
           gallery_urls?: string[]
           id?: string
           image_url?: string | null
@@ -464,7 +464,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
-          duration_minutes?: number
+          duration_minutes?: number | null
           gallery_urls?: string[]
           id?: string
           image_url?: string | null

@@ -80,7 +80,7 @@ export function AppointmentCard({
           <Clock className="size-4 shrink-0" aria-hidden />
           <span>
             {format(start, "h:mm a")}
-            {appointment.service &&
+            {appointment.service?.duration_minutes != null &&
               ` · ${formatDuration(appointment.service.duration_minutes)}`}
           </span>
         </div>

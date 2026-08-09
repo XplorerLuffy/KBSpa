@@ -75,8 +75,8 @@ export function ServiceForm({
           type="number"
           min={5}
           step={5}
-          defaultValue={service?.duration_minutes ?? 60}
-          required
+          defaultValue={service?.duration_minutes ?? undefined}
+          hint="Leave blank if this treatment doesn't have a fixed duration — it won't offer online slots, and customers will be asked to contact you to book it."
         />
         <Field
           name="price"

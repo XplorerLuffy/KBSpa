@@ -57,10 +57,14 @@ export function ServiceCard({ service }: { service: ServiceWithCategory }) {
         )}
 
         <div className="text-muted-foreground mt-auto flex items-center justify-between gap-3 pt-2 text-sm">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="size-4" aria-hidden />
-            {formatDuration(service.duration_minutes)}
-          </span>
+          {service.duration_minutes != null ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="size-4" aria-hidden />
+              {formatDuration(service.duration_minutes)}
+            </span>
+          ) : (
+            <span className="text-xs">Contact to book</span>
+          )}
           <span className="text-charcoal-900 dark:text-cream-100 font-serif text-lg font-medium">
             {formatCurrency(service.price)}
           </span>

@@ -138,25 +138,20 @@ check("exposes navigable sections", () => {
   assert.ok(config.sections.length > 0);
   config.sections.forEach((s) => assert.ok(s.path.startsWith("/admin")));
 });
-check("isAdminPath allows admin and the auth screens needed to reach it", () => {
+check("isAdminPath allows admin, including the admin login screen", () => {
   assert.ok(config.isAdminPath("/admin"));
+  assert.ok(config.isAdminPath("/admin/login"));
   assert.ok(config.isAdminPath("/admin/bookings"));
   assert.ok(config.isAdminPath("/admin/services/123/edit"));
-  assert.ok(config.isAdminPath("/login"));
-  assert.ok(config.isAdminPath("/signup"));
-  assert.ok(config.isAdminPath("/forgot-password"));
-  assert.ok(config.isAdminPath("/reset-password"));
-  assert.ok(config.isAdminPath("/auth/callback"));
 });
-check("isAdminPath rejects the public site, booking flow and customer account", () => {
+check("isAdminPath rejects the public site and booking flow", () => {
   assert.ok(!config.isAdminPath("/"));
   assert.ok(!config.isAdminPath("/services"));
   assert.ok(!config.isAdminPath("/services/deep-tissue-massage-60"));
   assert.ok(!config.isAdminPath("/about"));
   assert.ok(!config.isAdminPath("/gallery"));
   assert.ok(!config.isAdminPath("/booking"));
-  assert.ok(!config.isAdminPath("/account"));
-  assert.ok(!config.isAdminPath("/account/appointments"));
+  assert.ok(!config.isAdminPath("/booking/confirmation/abc123"));
 });
 check("isAdminPath does not false-positive on a path merely prefixed by an admin one", () => {
   // "/admins-r-us" starts with "/admin" as a raw string but is not under it.

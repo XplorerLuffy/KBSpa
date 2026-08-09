@@ -30,10 +30,11 @@ function projectRefFrom(url) {
   return match ? match[1] : null;
 }
 
-// This window only ever shows the admin panel and the auth screens needed to
-// reach it — never the public marketing site, the customer account area, or
-// booking flow, even though they live on the same domain.
-const ADMIN_PATHS = ["/admin", "/login", "/signup", "/forgot-password", "/reset-password", "/auth/callback"];
+// This window only ever shows the admin panel — never the public marketing
+// site or booking flow, even though they live on the same domain. There's no
+// separate customer login to account for: booking is guest checkout, and
+// /admin/login (covered by the /admin prefix) is the only sign-in screen.
+const ADMIN_PATHS = ["/admin"];
 
 function isAdminPath(pathname) {
   return ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

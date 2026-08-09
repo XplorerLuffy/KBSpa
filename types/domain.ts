@@ -2,6 +2,7 @@ import type { Tables } from "@/types/supabase";
 import type { AppointmentStatus, Gender } from "@/lib/constants";
 
 export type Profile = Tables<"profiles">;
+export type Customer = Tables<"customers">;
 export type Category = Tables<"categories">;
 export type Staff = Tables<"staff">;
 export type GalleryItem = Tables<"gallery_items">;
@@ -25,7 +26,7 @@ export type Appointment = Omit<Tables<"appointments">, "status" | "gender"> & {
 export type AppointmentWithRelations = Appointment & {
   service: Pick<Service, "id" | "name" | "slug" | "duration_minutes" | "price"> | null;
   staff: Pick<Staff, "id" | "full_name" | "title" | "photo_url"> | null;
-  customer?: Pick<Profile, "id" | "full_name" | "phone"> | null;
+  customer?: Pick<Customer, "id" | "full_name" | "phone"> | null;
 };
 
 export type TestimonialWithService = Testimonial & {

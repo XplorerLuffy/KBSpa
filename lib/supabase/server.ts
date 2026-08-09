@@ -27,14 +27,6 @@ export async function createClient() {
   );
 }
 
-export async function getSessionUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
-}
-
 export async function getCurrentProfile() {
   const supabase = await createClient();
   const {

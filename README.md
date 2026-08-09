@@ -1,7 +1,7 @@
 # Kuenphen Beauty Spa
 
-A production-ready booking website for Kuenphen Beauty Spa — marketing site, customer
-accounts, a real booking engine with double-booking prevention, and a full admin panel.
+A production-ready booking website for Kuenphen Beauty Spa — marketing site, guest
+checkout booking engine with double-booking prevention, and a full admin panel.
 
 Built with Next.js 15 (App Router), TypeScript, Tailwind CSS v4, Radix primitives,
 Framer Motion, React Hook Form + Zod, and Supabase (Postgres, Auth, Storage, RLS).
@@ -43,11 +43,8 @@ Optional:
 ```
 app/                        Routes only — thin, mostly Server Components
   (marketing)/              Public site: home, services, gallery, about, testimonials, contact, search
-  (auth)/                   Login, signup, forgot/reset password
-  auth/callback/            Supabase code-exchange handler
-  booking/                  Multi-step booking wizard + confirmation
-  account/                  Customer dashboard (guarded)
-  admin/                    Admin panel (guarded, role = admin)
+  booking/                  Multi-step guest booking wizard + confirmation (cancel/reschedule)
+  admin/                    Admin panel (guarded, role = admin) — includes /admin/login
 components/ui/              Design-system primitives (Radix-based, hand-authored)
 components/shared/          Logo, Navbar, Footer, GlassPanel, PageHero, …
 components/motion/          Framer Motion wrappers (FadeIn, StaggerList)
@@ -68,9 +65,10 @@ queries Supabase directly.
 
 ## Database
 
-The schema covers: `profiles`, `categories`, `services`, `staff`, `staff_services`,
+The schema covers: `profiles` (admin/staff logins only), `customers` (guest booking
+directory, matched by phone number), `categories`, `services`, `staff`, `staff_services`,
 `business_hours`, `holidays`, `appointments`, `gallery_items`, `testimonials`,
-`promotions`, `settings`, `favorites`, `notification_logs`, `contact_messages`.
+`promotions`, `settings`, `notification_logs`, `contact_messages`.
 
 ### Double-booking prevention
 
@@ -182,13 +180,12 @@ update public.profiles set role = 'admin' where id = (
    `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` — the last one must match the
    domain you're deploying to, or metadata/sitemap/auth-redirect links will point at the
    wrong host). `SUPABASE_SERVICE_ROLE_KEY` is optional — see `.env.example`.
-2. In Supabase → **Authentication → URL Configuration**, set the Site URL to your
-   production domain and add `<domain>/auth/callback` to the redirect allow-list.
-3. Storage is created by migration `00000000000003_media_storage.sql` — a single
+2. Storage is created by migration `00000000000003_media_storage.sql` — a single
    public `media` bucket that the admin panel uploads into. Nothing to click.
-4. Deploy the two Edge Functions and wire the webhook + cron (above).
-5. Deploy. Then walk the golden path: sign up → book → cancel/reschedule from
-   `/account` → approve in `/admin/bookings` → check it on the calendar.
+3. Deploy the two Edge Functions and wire the webhook + cron (above).
+4. Deploy. Then walk the golden path: book as a guest → cancel/reschedule from the
+   confirmation page it lands you on → approve in `/admin/bookings` → check it on
+   the calendar.
 
 `next.config.ts` already allow-lists your Supabase Storage host for `next/image`.
 

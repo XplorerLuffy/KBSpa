@@ -25,7 +25,7 @@ export type Database = {
           contact_name: string | null
           contact_phone: string | null
           created_at: string
-          customer_id: string
+          customer_id: string | null
           end_time: string
           gender: string | null
           id: string
@@ -47,7 +47,7 @@ export type Database = {
           contact_name?: string | null
           contact_phone?: string | null
           created_at?: string
-          customer_id: string
+          customer_id?: string | null
           end_time: string
           gender?: string | null
           id?: string
@@ -69,7 +69,7 @@ export type Database = {
           contact_name?: string | null
           contact_phone?: string | null
           created_at?: string
-          customer_id?: string
+          customer_id?: string | null
           end_time?: string
           gender?: string | null
           id?: string
@@ -89,7 +89,7 @@ export type Database = {
             foreignKeyName: "appointments_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "customers"
             referencedColumns: ["id"]
           },
           {
@@ -198,6 +198,37 @@ export type Database = {
           name?: string
           phone?: string | null
           subject?: string | null
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          gender: string | null
+          id: string
+          phone: string
+          phone_normalized: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          phone?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -630,7 +661,7 @@ export type Database = {
           contact_name: string | null
           contact_phone: string | null
           created_at: string
-          customer_id: string
+          customer_id: string | null
           end_time: string
           gender: string | null
           id: string
@@ -670,7 +701,7 @@ export type Database = {
           contact_name: string | null
           contact_phone: string | null
           created_at: string
-          customer_id: string
+          customer_id: string | null
           end_time: string
           gender: string | null
           id: string
@@ -693,6 +724,29 @@ export type Database = {
         }
       }
       email_is_admin: { Args: { check_email: string }; Returns: boolean }
+      get_appointment_confirmation: {
+        Args: { p_id: string }
+        Returns: {
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          end_time: string
+          gender: string | null
+          id: string
+          notes: string | null
+          price: number | null
+          service_duration_minutes: number | null
+          service_id: string
+          service_name: string
+          service_slug: string
+          staff_full_name: string
+          staff_id: string
+          staff_photo_url: string | null
+          staff_title: string | null
+          start_time: string
+          status: string
+        }[]
+      }
       get_available_slots: {
         Args: {
           p_date: string
@@ -718,7 +772,7 @@ export type Database = {
           contact_name: string | null
           contact_phone: string | null
           created_at: string
-          customer_id: string
+          customer_id: string | null
           end_time: string
           gender: string | null
           id: string

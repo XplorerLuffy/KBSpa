@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -99,14 +98,11 @@ export function AdminLoginForm() {
         )}
       </div>
 
-      <div className="flex items-center justify-between px-1 text-sm">
+      <div className="px-1 text-sm">
         <label className="text-charcoal-400 flex items-center gap-2">
           <Checkbox checked={rememberMe} onCheckedChange={(v) => setRememberMe(v === true)} />
           Remember me
         </label>
-        <Link href="/forgot-password" className="text-gold-700 hover:underline">
-          Forgot password?
-        </Link>
       </div>
 
       <Button

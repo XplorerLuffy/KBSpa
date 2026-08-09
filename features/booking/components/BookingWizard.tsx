@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { addDays, format, isSameDay, startOfDay } from "date-fns";
@@ -44,8 +43,6 @@ const DAYS_AHEAD = 30;
 type Props = {
   services: ServiceWithCategory[];
   staffByService: Record<string, Staff[]>;
-  defaultProfile: { name: string; email: string; phone: string } | null;
-  isAuthenticated: boolean;
   preselectedSlug?: string;
   contact: { phone?: string; whatsapp?: string };
 };
@@ -53,8 +50,6 @@ type Props = {
 export function BookingWizard({
   services,
   staffByService,
-  defaultProfile,
-  isAuthenticated,
   preselectedSlug,
   contact,
 }: Props) {
@@ -111,9 +106,9 @@ export function BookingWizard({
     resolver: zodResolver(bookingDetailsSchema),
     mode: "onBlur",
     defaultValues: {
-      name: state.name || defaultProfile?.name || "",
-      email: state.email || defaultProfile?.email || "",
-      phone: state.phone || defaultProfile?.phone || "",
+      name: state.name || "",
+      email: state.email || "",
+      phone: state.phone || "",
       notes: state.notes,
     },
   });
@@ -470,27 +465,9 @@ export function BookingWizard({
             </Card>
 
             <p className="text-muted-foreground text-sm">
-              Payment is taken in the salon. You can cancel free of charge up to 24 hours
-              before your appointment.
+              Payment is taken in the salon. Use your confirmation page after booking to
+              cancel or reschedule, free of charge up to 24 hours before your appointment.
             </p>
-
-            {!isAuthenticated && (
-              <Card className="border-gold-300 bg-gold-50 flex flex-col gap-3 p-5">
-                <p className="text-sm font-medium">Sign in to confirm</p>
-                <p className="text-muted-foreground text-sm">
-                  We keep your bookings in your account so you can reschedule or cancel
-                  them later.
-                </p>
-                <div className="flex gap-2">
-                  <Button asChild size="sm">
-                    <Link href="/login?redirect=/booking">Sign in</Link>
-                  </Button>
-                  <Button asChild size="sm" variant="outline">
-                    <Link href="/signup">Create account</Link>
-                  </Button>
-                </div>
-              </Card>
-            )}
           </div>
         );
 
@@ -501,7 +478,7 @@ export function BookingWizard({
 
   const canGoNext = () => {
     if (step === 4) return true;
-    if (step === 5) return isAuthenticated && Boolean(state.slot);
+    if (step === 5) return Boolean(state.slot);
     return false;
   };
 

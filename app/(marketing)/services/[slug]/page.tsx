@@ -11,8 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ServiceCard } from "@/features/services/components/ServiceCard";
-import { FavoriteButton } from "@/features/account/components/FavoriteButton";
-import { createClient, getSessionUser } from "@/lib/supabase/server";
 import {
   getServiceBySlug,
   getServices,
@@ -51,24 +49,11 @@ export default async function ServiceDetailPage({
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
-  const [therapists, settings, related, user] = await Promise.all([
+  const [therapists, settings, related] = await Promise.all([
     getStaffForService(service.id),
     getSettings(),
     getServices({ categorySlug: service.category?.slug, limit: 4 }),
-    getSessionUser(),
   ]);
-
-  let isFavorited = false;
-  if (user) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("favorites")
-      .select("service_id")
-      .eq("customer_id", user.id)
-      .eq("service_id", service.id)
-      .maybeSingle();
-    isFavorited = Boolean(data);
-  }
 
   const gallery = [service.image_url, ...service.gallery_urls].filter(
     (url): url is string => Boolean(url),
@@ -234,11 +219,6 @@ export default async function ServiceDetailPage({
                     {service.duration_minutes != null ? "Book Appointment" : "Contact to Book"}
                   </Link>
                 </Button>
-                <FavoriteButton
-                  serviceId={service.id}
-                  initialFavorited={isFavorited}
-                  isAuthenticated={Boolean(user)}
-                />
               </div>
 
               <p className="text-muted-foreground text-center text-xs">

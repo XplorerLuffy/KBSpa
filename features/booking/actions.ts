@@ -33,7 +33,12 @@ function bookingErrorMessage(message: string) {
     return "This treatment doesn't have online booking slots — please contact us directly.";
   }
   if (message.includes("STAFF_UNAVAILABLE")) return "That therapist is unavailable.";
-  if (message.includes("AUTH_REQUIRED")) return "Please sign in to confirm your booking.";
+  if (message.includes("PHONE_REQUIRED")) return "A phone number is required to book.";
+  if (message.includes("NOT_FOUND")) return "This booking could not be found.";
+  if (message.includes("NOT_CANCELLABLE")) return "This appointment can no longer be cancelled.";
+  if (message.includes("NOT_RESCHEDULABLE")) {
+    return "This appointment can no longer be rescheduled.";
+  }
   return "Could not confirm your booking. Please try again.";
 }
 
@@ -62,10 +67,15 @@ export async function createAppointment(input: {
 
   if (error) return { ok: false as const, error: bookingErrorMessage(error.message) };
 
-  revalidatePath("/account/appointments");
+  revalidatePath("/admin/bookings");
   return { ok: true as const, appointmentId: (data as { id: string }).id };
 }
 
+/**
+ * Ownership for a guest is the appointment id itself — an unguessable UUID
+ * only they have, from the confirmation page or a link. There's no auth
+ * session to check against.
+ */
 export async function cancelAppointment(appointmentId: string, reason?: string) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("cancel_appointment", {
@@ -73,16 +83,9 @@ export async function cancelAppointment(appointmentId: string, reason?: string) 
     p_reason: reason,
   });
 
-  if (error) {
-    return {
-      ok: false as const,
-      error: error.message.includes("NOT_CANCELLABLE")
-        ? "This appointment can no longer be cancelled."
-        : "Could not cancel the appointment.",
-    };
-  }
+  if (error) return { ok: false as const, error: bookingErrorMessage(error.message) };
 
-  revalidatePath("/account/appointments");
+  revalidatePath(`/booking/confirmation/${appointmentId}`);
   revalidatePath("/admin/bookings");
   return { ok: true as const };
 }
@@ -101,7 +104,40 @@ export async function rescheduleAppointment(input: {
 
   if (error) return { ok: false as const, error: bookingErrorMessage(error.message) };
 
-  revalidatePath("/account/appointments");
+  revalidatePath(`/booking/confirmation/${input.appointmentId}`);
   revalidatePath("/admin/bookings");
   return { ok: true as const };
+}
+
+export type AppointmentConfirmation = {
+  id: string;
+  status: string;
+  start_time: string;
+  end_time: string;
+  contact_name: string | null;
+  contact_phone: string | null;
+  contact_email: string | null;
+  gender: string | null;
+  notes: string | null;
+  price: number | null;
+  service_id: string;
+  service_name: string;
+  service_slug: string;
+  service_duration_minutes: number | null;
+  staff_id: string;
+  staff_full_name: string;
+  staff_title: string | null;
+  staff_photo_url: string | null;
+};
+
+export async function getAppointmentConfirmation(
+  id: string,
+): Promise<AppointmentConfirmation | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .rpc("get_appointment_confirmation", { p_id: id })
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return data as AppointmentConfirmation;
 }

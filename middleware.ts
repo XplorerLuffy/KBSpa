@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/account", "/booking/review", "/booking/confirmation"];
 const ADMIN_PREFIX = "/admin";
 const ADMIN_LOGIN_PATH = "/admin/login";
 
@@ -12,7 +11,11 @@ const ADMIN_LOGIN_PATH = "/admin/login";
  * Every failure path is handled rather than thrown: an exception here returns a
  * 500 for *every* request, so a missing env var or a Supabase blip would take
  * the whole site down. Instead we fail closed on guarded routes (send the user
- * to /login) and open on public ones.
+ * to /admin/login) and open on public ones.
+ *
+ * The only guarded area is /admin — booking is guest checkout (no customer
+ * account, no login) and self-service cancel/reschedule is proven by knowing
+ * the appointment's own id, not a session, so there's nothing else to guard.
  *
  * `@supabase/ssr` is loaded with a dynamic import *inside* the try block below,
  * not as a static top-level import. A static import is evaluated when the module
@@ -31,15 +34,12 @@ function isGuarded(pathname: string) {
   if (pathname === ADMIN_LOGIN_PATH || pathname.startsWith(`${ADMIN_LOGIN_PATH}/`)) {
     return false;
   }
-  return (
-    pathname.startsWith(ADMIN_PREFIX) ||
-    PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-  );
+  return pathname.startsWith(ADMIN_PREFIX);
 }
 
-function redirectToLogin(request: NextRequest, pathname: string) {
+function redirectToLogin(request: NextRequest) {
   const url = request.nextUrl.clone();
-  url.pathname = pathname.startsWith(ADMIN_PREFIX) ? ADMIN_LOGIN_PATH : "/login";
+  url.pathname = ADMIN_LOGIN_PATH;
   url.searchParams.set("redirect", request.nextUrl.pathname);
   return NextResponse.redirect(url);
 }
@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
     console.error(
       "Supabase env vars are missing; auth guards are inactive. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
     );
-    return isGuarded(pathname) ? redirectToLogin(request, pathname) : NextResponse.next();
+    return isGuarded(pathname) ? redirectToLogin(request) : NextResponse.next();
   }
 
   try {
@@ -83,7 +83,7 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && isGuarded(pathname)) return redirectToLogin(request, pathname);
+    if (!user && isGuarded(pathname)) return redirectToLogin(request);
 
     if (user && pathname.startsWith(ADMIN_PREFIX)) {
       const { data: profile } = await supabase
@@ -103,7 +103,7 @@ export async function middleware(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("Middleware failed:", error);
-    return isGuarded(pathname) ? redirectToLogin(request, pathname) : NextResponse.next();
+    return isGuarded(pathname) ? redirectToLogin(request) : NextResponse.next();
   }
 }
 

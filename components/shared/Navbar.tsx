@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, UserRound } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,11 +17,9 @@ import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function Navbar({
-  isAuthenticated,
   logoUrl,
   overDarkHero = false,
 }: {
-  isAuthenticated: boolean;
   logoUrl?: string | null;
   /**
    * True only when the home hero shows the salon's own photo/video behind a
@@ -101,20 +99,6 @@ export function Navbar({
             </Link>
           </Button>
 
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className={cn("hidden sm:inline-flex", !solid && "text-white hover:bg-white/15 hover:text-white")}
-          >
-            <Link
-              href={isAuthenticated ? "/account" : "/login"}
-              aria-label={isAuthenticated ? "My account" : "Sign in"}
-            >
-              <UserRound />
-            </Link>
-          </Button>
-
           <Button asChild className="hidden sm:inline-flex">
             <Link href="/booking">Book Now</Link>
           </Button>
@@ -146,16 +130,6 @@ export function Navbar({
                     </SheetClose>
                   </li>
                 ))}
-                <li>
-                  <SheetClose asChild>
-                    <Link
-                      href={isAuthenticated ? "/account" : "/login"}
-                      className="hover:bg-accent block rounded-xl px-4 py-3 text-sm font-medium"
-                    >
-                      {isAuthenticated ? "My Account" : "Sign In"}
-                    </Link>
-                  </SheetClose>
-                </li>
               </ul>
               <SheetClose asChild>
                 <Button asChild className="mt-2 w-full">

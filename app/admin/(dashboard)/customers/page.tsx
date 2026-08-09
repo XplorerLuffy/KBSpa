@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { format } from "date-fns";
 import { Users } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -18,14 +17,14 @@ export const metadata: Metadata = { title: "Customers", robots: { index: false }
 
 export default async function AdminCustomersPage() {
   const supabase = await createClient();
-  const [{ data: profiles }, { data: appointments }] = await Promise.all([
-    supabase.from("profiles").select("*").order("created_at", { ascending: false }),
+  const [{ data: customers }, { data: appointments }] = await Promise.all([
+    supabase.from("customers").select("*").order("created_at", { ascending: false }),
     supabase.from("appointments").select("customer_id, status"),
   ]);
 
   const bookingCounts = new Map<string, number>();
   for (const row of appointments ?? []) {
-    if (["cancelled", "rejected"].includes(row.status)) continue;
+    if (!row.customer_id || ["cancelled", "rejected"].includes(row.status)) continue;
     bookingCounts.set(row.customer_id, (bookingCounts.get(row.customer_id) ?? 0) + 1);
   }
 
@@ -34,12 +33,12 @@ export default async function AdminCustomersPage() {
       <div>
         <h1 className="font-serif text-3xl font-medium">Customers</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          {(profiles ?? []).length} registered
+          {(customers ?? []).length} on record, matched by phone number
         </p>
       </div>
 
       <Card className="overflow-hidden">
-        {(profiles ?? []).length === 0 ? (
+        {(customers ?? []).length === 0 ? (
           <EmptyState className="border-0" icon={Users} title="No customers yet" />
         ) : (
           <Table>
@@ -47,28 +46,26 @@ export default async function AdminCustomersPage() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Phone</TableHead>
+                <TableHead>Email</TableHead>
                 <TableHead>Bookings</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Joined</TableHead>
+                <TableHead>First seen</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(profiles ?? []).map((profile) => (
-                <TableRow key={profile.id}>
+              {(customers ?? []).map((customer) => (
+                <TableRow key={customer.id}>
                   <TableCell className="font-medium">
-                    {profile.full_name ?? "—"}
+                    {customer.full_name ?? "—"}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {profile.phone ?? "—"}
-                  </TableCell>
-                  <TableCell>{bookingCounts.get(profile.id) ?? 0}</TableCell>
-                  <TableCell>
-                    <Badge variant={profile.role === "admin" ? "default" : "neutral"}>
-                      {profile.role}
-                    </Badge>
+                    {customer.phone}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {format(new Date(profile.created_at), "d MMM yyyy")}
+                    {customer.email ?? "—"}
+                  </TableCell>
+                  <TableCell>{bookingCounts.get(customer.id) ?? 0}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {format(new Date(customer.created_at), "d MMM yyyy")}
                   </TableCell>
                 </TableRow>
               ))}

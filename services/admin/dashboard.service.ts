@@ -23,7 +23,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     supabase
       .from("appointments")
       .select(
-        "*, service:services(id, name, slug, duration_minutes, price), staff:staff(id, full_name, title, photo_url), customer:profiles(id, full_name, phone)",
+        "*, service:services(id, name, slug, duration_minutes, price), staff:staff(id, full_name, title, photo_url), customer:customers(id, full_name, phone)",
       )
       .gte("start_time", dayStart)
       .lte("start_time", dayEnd)
@@ -36,7 +36,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       .from("appointments")
       .select("id", { count: "exact", head: true })
       .eq("status", "pending"),
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase.from("customers").select("id", { count: "exact", head: true }),
   ]);
 
   const monthRows = month.data ?? [];

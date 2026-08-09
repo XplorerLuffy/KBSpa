@@ -36,11 +36,7 @@ export default async function ConfirmationPage({
         </span>
         <h1 className="font-serif text-3xl font-medium">Your booking is in</h1>
         <p className="text-muted-foreground max-w-md">
-          {appointment.contact_email
-            ? `We have sent a confirmation to ${appointment.contact_email}. `
-            : ""}
-          Our team will confirm your appointment shortly. Bookmark this page — it&apos;s
-          how you&apos;ll manage this booking later.
+          Our team will confirm your appointment shortly.
         </p>
         <Badge>{STATUS_LABELS[appointment.status as AppointmentStatus]}</Badge>
       </div>

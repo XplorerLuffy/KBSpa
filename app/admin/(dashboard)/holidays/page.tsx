@@ -37,7 +37,8 @@ export default async function HolidaysPage() {
       <div>
         <h1 className="font-serif text-3xl font-medium">Holidays & closures</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Block a whole day for the salon, or just one therapist&rsquo;s vacation.
+          Block a day (or a whole range) for the salon, or just one therapist&rsquo;s
+          leave.
         </p>
       </div>
 
@@ -49,7 +50,13 @@ export default async function HolidaysPage() {
             submitLabel="Block date"
             successMessage="Date blocked"
           >
-            <Field name="date" label="Date" type="date" required />
+            <Field name="date" label="Start date" type="date" required />
+            <Field
+              name="end_date"
+              label="End date"
+              type="date"
+              hint="Leave blank for a single day — set this for a multi-day leave or closure."
+            />
             <SelectField
               name="staff_id"
               label="Applies to"

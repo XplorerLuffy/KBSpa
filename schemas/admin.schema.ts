@@ -37,11 +37,17 @@ export const staffSchema = z.object({
   service_ids: z.array(z.string().uuid()).default([]),
 });
 
-export const holidaySchema = z.object({
-  date: z.string().min(1, "Choose a date"),
-  staff_id: z.string().uuid().optional().or(z.literal("")),
-  reason: z.string().optional(),
-});
+export const holidaySchema = z
+  .object({
+    date: z.string().min(1, "Choose a date"),
+    end_date: z.string().optional().or(z.literal("")),
+    staff_id: z.string().uuid().optional().or(z.literal("")),
+    reason: z.string().optional(),
+  })
+  .refine((values) => !values.end_date || values.end_date >= values.date, {
+    message: "End date can't be before the start date",
+    path: ["end_date"],
+  });
 
 export const businessHourSchema = z.object({
   weekday: z.coerce.number().int().min(0).max(6),

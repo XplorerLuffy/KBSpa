@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { eachDayOfInterval, format, parseISO } from "date-fns";
 import { createClient } from "@/lib/supabase/server";
 import {
   businessHourSchema,
@@ -231,19 +232,36 @@ export async function saveHoliday(formData: FormData): Promise<Result> {
   const supabase = await requireAdmin();
   const parsed = holidaySchema.safeParse({
     date: formData.get("date"),
+    end_date: formData.get("end_date") || "",
     staff_id: formData.get("staff_id") || "",
     reason: formData.get("reason") || undefined,
   });
 
-  if (!parsed.success) return fail("Please choose a date.");
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Please choose a date.");
+  }
 
-  const { error } = await supabase.from("holidays").insert({
-    date: parsed.data.date,
-    staff_id: parsed.data.staff_id || null,
-    reason: parsed.data.reason ?? null,
-  });
+  const days = parsed.data.end_date
+    ? eachDayOfInterval({
+        start: parseISO(parsed.data.date),
+        end: parseISO(parsed.data.end_date),
+      }).map((day) => format(day, "yyyy-MM-dd"))
+    : [parsed.data.date];
 
-  if (error) return fail("Could not add this date — it may already be blocked.");
+  if (days.length > 90) return fail("That range is too long — please split it up.");
+
+  // Inserted one day at a time: the unique index is on an expression
+  // (date, coalesce(staff_id, ...)), which a batch upsert can't target via
+  // onConflict, and a day that's already blocked should be skipped rather
+  // than failing the whole range.
+  for (const date of days) {
+    const { error } = await supabase.from("holidays").insert({
+      date,
+      staff_id: parsed.data.staff_id || null,
+      reason: parsed.data.reason ?? null,
+    });
+    if (error && error.code !== "23505") return fail("Could not add these dates.");
+  }
 
   revalidatePath("/admin/holidays");
   return { ok: true };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import { AdminForm } from "@/features/admin/components/AdminForm";
 import { Field, TextareaField } from "@/features/admin/components/Field";
+import { ChangePasswordForm } from "@/features/admin/components/ChangePasswordForm";
 import { saveSettings } from "@/features/admin/actions";
 import { getSettings } from "@/services/content.service";
 import { MediaField } from "@/features/admin/components/MediaField";
@@ -153,6 +154,16 @@ export default async function AdminSettingsPage() {
             />
           </div>
         </AdminForm>
+      </Card>
+
+      <Card className="max-w-3xl p-7">
+        <div className="mb-5">
+          <h2 className="font-serif text-lg font-medium">Account &amp; security</h2>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Change the password used to sign in here and in the desktop app.
+          </p>
+        </div>
+        <ChangePasswordForm />
       </Card>
     </div>
   );

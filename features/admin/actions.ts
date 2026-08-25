@@ -13,6 +13,7 @@ import {
   staffSchema,
   testimonialSchema,
 } from "@/schemas/admin.schema";
+import { changePasswordSchema } from "@/schemas/auth.schema";
 import type { AppointmentStatus } from "@/lib/constants";
 
 type Result = { ok: true } | { ok: false; error: string };
@@ -435,5 +436,42 @@ export async function saveSettings(formData: FormData): Promise<Result> {
   if (error) return fail("Could not save the settings.");
 
   revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/* -------------------------------------------------- account */
+
+/**
+ * Requires the current password, not just an active session — the desktop
+ * app runs on a shared front-desk machine, so being signed in isn't proof
+ * you're the owner. Re-authenticating against the account's own email
+ * confirms it before Supabase Auth will accept the new one.
+ */
+export async function changePassword(formData: FormData): Promise<Result> {
+  const supabase = await requireAdmin();
+
+  const parsed = changePasswordSchema.safeParse({
+    currentPassword: formData.get("currentPassword"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Please check the form.");
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) return fail("Could not verify your account.");
+
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: parsed.data.currentPassword,
+  });
+  if (reauthError) return fail("Current password is incorrect.");
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  if (error) return fail("Could not update your password.");
+
   return { ok: true };
 }

@@ -33,4 +33,9 @@ export type TestimonialWithService = Testimonial & {
   service: Pick<Service, "id" | "name" | "slug"> | null;
 };
 
+export type PromotionWithRelations = Promotion & {
+  service: Pick<Service, "id" | "name" | "slug"> | null;
+  category: Pick<Category, "id" | "name" | "slug"> | null;
+};
+
 export type SiteSettings = Record<string, string>;

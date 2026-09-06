@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import type {
   BusinessHour,
   GalleryItem,
-  Promotion,
+  PromotionWithRelations,
   SiteSettings,
   TestimonialWithService,
 } from "@/types/domain";
@@ -128,14 +128,20 @@ export async function getHomeStats(): Promise<{
   };
 }
 
-export async function getActivePromotions(): Promise<Promotion[]> {
+export async function getActivePromotions(): Promise<PromotionWithRelations[]> {
   const supabase = await createClient();
   const now = new Date().toISOString();
   const { data } = await supabase
     .from("promotions")
-    .select("*")
+    .select(
+      "*, service:services(id, name, slug), category:categories(id, name, slug)",
+    )
     .eq("is_active", true)
+    // Both bounds are optional, so a promotion is live unless it's explicitly
+    // scheduled outside "now" — starts_at was previously not checked at all,
+    // which meant a promotion scheduled for the future went live immediately.
+    .or(`starts_at.is.null,starts_at.lte.${now}`)
     .or(`ends_at.is.null,ends_at.gte.${now}`)
     .order("created_at", { ascending: false });
-  return data ?? [];
+  return (data ?? []) as unknown as PromotionWithRelations[];
 }

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Hero } from "@/features/marketing/components/Hero";
 import { TrustStats } from "@/features/marketing/components/TrustStats";
+import { PromotionsBanner } from "@/features/marketing/components/PromotionsBanner";
 import { ServiceCard } from "@/features/services/components/ServiceCard";
 import { TestimonialCarousel } from "@/features/testimonials/components/TestimonialCarousel";
 import { SectionHeading } from "@/components/shared/SectionHeading";
@@ -32,6 +33,7 @@ import { WEEKDAYS } from "@/lib/constants";
 import type {
   BusinessHour,
   Category,
+  PromotionWithRelations,
   ServiceWithCategory,
   SiteSettings,
   TestimonialWithService,
@@ -107,6 +109,7 @@ export function HomeView({
   testimonials,
   stats,
   hours,
+  promotions,
 }: {
   settings: SiteSettings;
   featured: ServiceWithCategory[];
@@ -119,6 +122,7 @@ export function HomeView({
     reviewCount: number;
   };
   hours: BusinessHour[];
+  promotions: PromotionWithRelations[];
 }) {
   const visibleCategories = categories.slice(0, HOME_CATEGORY_LIMIT);
   const hasMoreCategories = categories.length > HOME_CATEGORY_LIMIT;
@@ -149,6 +153,8 @@ export function HomeView({
       />
 
       <TrustStats {...stats} />
+
+      <PromotionsBanner promotions={promotions} />
 
       {/* About */}
       <section className="section container-page">

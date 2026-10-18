@@ -15,7 +15,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "url not allowed" }, { status: 400 });
   }
 
-  const res = await fetch(url, { redirect: "follow" });
+  const res = await fetch(url, {
+    redirect: "follow",
+    headers: {
+      "User-Agent": "KuenphenBeautySpaBrochureBot/1.0 (internal one-off asset fetch; contact: hello@kuenphenbeautyspa.com)",
+    },
+  });
   if (!res.ok) {
     return NextResponse.json({ error: `upstream ${res.status}` }, { status: 502 });
   }
